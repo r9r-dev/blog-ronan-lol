@@ -1,0 +1,237 @@
+/*
+  Purple Rose Dark Theme for Highlight.js
+  A beautiful dark theme with purple and rose accent colors
+  Designed to complement modern dark UIs
+*/
+
+.hljs {
+  color: #e6e6fa; /* Light lavender for base text */
+  background: #1a1625; /* Deep purple-black background */
+  border-radius: 8px;
+  padding: 1.5rem;
+  font-family: 'JetBrains Mono', 'Fira Code', 'Monaco', 'Consolas', monospace;
+  font-size: 0.9rem;
+  line-height: 1.6;
+  overflow-x: auto;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  border: 1px solid rgba(147, 51, 234, 0.2); /* Subtle purple border */
+}
+
+.hljs-subst {
+  color: #e6e6fa;
+}
+
+/* Keywords - Purple tones */
+.hljs-keyword,
+.hljs-selector-tag,
+.hljs-literal,
+.hljs-title.function_,
+.hljs-built_in {
+  color: #c084fc; /* Light purple */
+  font-weight: 600;
+}
+
+/* Types, classes - Rose/Pink tones */
+.hljs-type,
+.hljs-class .hljs-title,
+.hljs-title.class_ {
+  color: #f472b6; /* Rose pink */
+  font-weight: 600;
+}
+
+/* Strings - Soft rose */
+.hljs-string,
+.hljs-char,
+.hljs-template-variable,
+.hljs-template-tag {
+  color: #fb7185; /* Soft rose */
+}
+
+/* Numbers - Light purple */
+.hljs-number,
+.hljs-literal {
+  color: #ddd6fe; /* Very light purple */
+}
+
+/* Comments - Muted purple */
+.hljs-comment,
+.hljs-quote {
+  color: #a78bfa; /* Muted purple */
+  font-style: italic;
+  opacity: 0.8;
+}
+
+/* Variables - Light lavender */
+.hljs-variable,
+.hljs-name,
+.hljs-attr {
+  color: #e879f9; /* Bright magenta */
+}
+
+/* Functions - Bright purple */
+.hljs-function .hljs-title,
+.hljs-title.function {
+  color: #c084fc; /* Light purple */
+  font-weight: 600;
+}
+
+/* Tags (HTML) - Rose */
+.hljs-tag,
+.hljs-tag .hljs-name {
+  color: #f43f5e; /* Bright rose */
+}
+
+/* Attributes - Soft purple */
+.hljs-attribute {
+  color: #d8b4fe; /* Soft purple */
+}
+
+/* Operators, punctuation - Light gray with purple tint */
+.hljs-operator,
+.hljs-punctuation {
+  color: #d1d5db;
+}
+
+/* Meta, preprocessor - Muted rose */
+.hljs-meta,
+.hljs-meta .hljs-keyword {
+  color: #fda4af; /* Light rose */
+}
+
+/* Doctags, annotations - Bright magenta */
+.hljs-doctag,
+.hljs-annotation {
+  color: #e879f9;
+}
+
+/* Symbols, constants - Bright purple */
+.hljs-symbol,
+.hljs-bullet,
+.hljs-code {
+  color: #a855f7; /* Medium purple */
+}
+
+/* Links - Cyan-purple */
+.hljs-link {
+  color: #8b5cf6;
+  text-decoration: underline;
+}
+
+/* Regex - Rose gold */
+.hljs-regexp {
+  color: #f59e0b;
+}
+
+/* Section, selector-id - Bright rose */
+.hljs-section,
+.hljs-selector-id {
+  color: #ec4899;
+  font-weight: 600;
+}
+
+/* Additions (diff) - Soft green with purple tint */
+.hljs-addition {
+  background-color: rgba(16, 185, 129, 0.2);
+  color: #10b981;
+}
+
+/* Deletions (diff) - Soft red with rose tint */
+.hljs-deletion {
+  background-color: rgba(239, 68, 68, 0.2);
+  color: #ef4444;
+}
+
+/* Emphasis - Italic with rose color */
+.hljs-emphasis {
+  font-style: italic;
+  color: #fb7185;
+}
+
+/* Strong - Bold with purple color */
+.hljs-strong {
+  font-weight: 700;
+  color: #c084fc;
+}
+
+/* Special highlighting for important keywords */
+.hljs-keyword.hljs-important,
+.hljs-selector-tag.hljs-important {
+  color: #f43f5e;
+  font-weight: 700;
+}
+
+/* Scrollbar styling for code blocks */
+.hljs::-webkit-scrollbar {
+  height: 8px;
+}
+
+.hljs::-webkit-scrollbar-track {
+  background: rgba(147, 51, 234, 0.1);
+}
+
+.hljs::-webkit-scrollbar-thumb {
+  background: linear-gradient(90deg, #c084fc, #f472b6);
+  border-radius: 4px;
+}
+
+.hljs::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(90deg, #a855f7, #ec4899);
+}
+
+/* Line numbers (if used) */
+.hljs-ln-numbers {
+  color: #6b7280;
+  border-right: 1px solid rgba(147, 51, 234, 0.2);
+  padding-right: 0.5rem;
+  margin-right: 0.5rem;
+  user-select: none;
+}
+
+/* Selection highlighting */
+.hljs::selection {
+  background-color: rgba(196, 132, 252, 0.3);
+}
+
+.hljs::-moz-selection {
+  background-color: rgba(196, 132, 252, 0.3);
+}
+
+/* Code block container enhancement */
+.hljs-container {
+  position: relative;
+  margin: 1.5rem 0;
+}
+
+/* Language badge (if implemented) */
+.hljs-lang {
+  position: absolute;
+  top: 0.5rem;
+  right: 0.5rem;
+  background: linear-gradient(135deg, #c084fc, #f472b6);
+  color: white;
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+  font-size: 0.75rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* Inline code styling */
+.hljs-inline {
+  background: rgba(147, 51, 234, 0.15);
+  color: #e879f9;
+  padding: 0.125rem 0.375rem;
+  border-radius: 4px;
+  font-size: 0.875em;
+  border: 1px solid rgba(147, 51, 234, 0.2);
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .hljs {
+    font-size: 0.8rem;
+    padding: 1rem;
+    border-radius: 6px;
+  }
+}

@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blog Moderne Sombre</title>
+    <meta name="description" content="Un blog moderne et élégant à thème sombre avec défilement infini">
+    
+    <!-- Preload critical resources -->
+    <link rel="preload" href="styles.css" as="style">
+    <link rel="preload" href="app.js" as="script">
+    
+    <!-- Modern Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    
+    <!-- Styles -->
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="highlight-purple-rose.css">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📝</text></svg>">
+</head>
+<body>
+    <div class="app">
+        <!-- Header -->
+        <header class="header">
+            <div class="container">
+                <h1 class="logo">
+                    <a href="/">ModernDark</a>
+                </h1>
+                <nav class="nav">
+                    <div class="search-container">
+                        <input type="text" 
+                               id="search-input" 
+                               class="search-input" 
+                               placeholder="Rechercher des articles..." 
+                               autocomplete="off">
+                        <div class="search-icon">🔍</div>
+                        <button class="search-clear" id="search-clear" style="display: none;">×</button>
+                    </div>
+                </nav>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="main">
+            <div class="container">
+                <!-- Hero Section -->
+                <section class="hero">
+                    <h2 class="hero-title">Perspectives Numériques Modernes</h2>
+                    <p class="hero-subtitle">Un espace moderne et élégant pour la technologie, les idées et l'innovation</p>
+                </section>
+
+                <!-- Blog Posts Container -->
+                <section class="blog-posts" id="blog-posts">
+                    <!-- Posts will be dynamically loaded here -->
+                </section>
+
+                <!-- Loading Indicator -->
+                <div class="loading-indicator" id="loading-indicator">
+                    <div class="loading-spinner"></div>
+                    <p>Chargement d'autres articles...</p>
+                </div>
+
+                <!-- End of Posts Indicator -->
+                <div class="end-indicator" id="end-indicator" style="display: none;">
+                    <p>📚 Vous avez atteint la fin ! Merci pour votre lecture.</p>
+                </div>
+
+                <!-- Scroll to Top Button -->
+                <button class="scroll-top" id="scroll-top" aria-label="Remonter en haut">
+                    ↑
+                </button>
+            </div>
+        </main>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <div class="container">
+                <p>&copy; 2024 Blog ModernDark. Conçu avec des technologies web modernes.</p>
+            </div>
+        </footer>
+    </div>
+
+    <!-- Error Modal -->
+    <div class="modal" id="error-modal" style="display: none;">
+        <div class="modal-content">
+            <span class="modal-close" id="modal-close">&times;</span>
+            <h3>Oups ! Une erreur s'est produite</h3>
+            <p id="error-message"></p>
+            <button class="btn btn-primary" onclick="location.reload()">Recharger la page</button>
+        </div>
+    </div>
+
+    <!-- Loading Sentinel (for intersection observer) -->
+    <div class="loading-sentinel" id="loading-sentinel"></div>
+
+    <script src="app.js"></script>
+</body>
+</html>
