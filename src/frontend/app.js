@@ -532,8 +532,8 @@ class BlogApp {
         });
       }
     } else {
-      heroTitle.textContent = 'Perspectives Numériques Modernes';
-      heroSubtitle.textContent = 'Un espace moderne et élégant pour la technologie, les idées et l\'innovation';
+      heroTitle.textContent = 'Blue Archer';
+      heroSubtitle.textContent = 'Mon univers : technologie, jeux-vidéo, idées et pensées';
     }
   }
 
