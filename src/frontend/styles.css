@@ -47,6 +47,26 @@ body {
   overflow-x: hidden;
 }
 
+/* Global link styles */
+a {
+  color: var(--primary-color);
+  text-decoration: none;
+  transition: var(--transition);
+}
+
+a:hover {
+  color: var(--accent-color);
+}
+
+a:visited {
+  color: var(--primary-color);
+  opacity: 0.95;
+}
+
+a:active {
+  color: var(--accent-color);
+}
+
 /* Container */
 .container {
   max-width: 800px;
@@ -170,11 +190,11 @@ body {
   padding: 2rem 0;
 }
 
-/* Hero Section */
+/* Hero Section - Only visible for search/tag filters */
 .hero {
   text-align: center;
-  margin-bottom: 3rem;
-  padding: 2rem 0;
+  margin-bottom: 2rem;
+  padding: 1rem 0;
 }
 
 .hero-title {
@@ -345,6 +365,34 @@ body {
   margin-bottom: 1rem;
 }
 
+/* Links Styling */
+.post-content a,
+.post-excerpt a {
+  color: var(--primary-color);
+  text-decoration: none;
+  border-bottom: 1px solid transparent;
+  transition: var(--transition);
+  position: relative;
+}
+
+.post-content a:hover,
+.post-excerpt a:hover {
+  color: var(--accent-color);
+  border-bottom-color: var(--accent-color);
+}
+
+.post-content a:visited,
+.post-excerpt a:visited {
+  color: var(--primary-color);
+  opacity: 0.9;
+}
+
+.post-content a:active,
+.post-excerpt a:active {
+  color: var(--accent-color);
+  transform: translateY(1px);
+}
+
 .post-content ul,
 .post-content ol {
   margin: 1rem 0;
@@ -401,8 +449,18 @@ body {
 
 .read-more:hover {
   gap: 0.75rem;
-  border-bottom-color: var(--primary-color);
+  border-bottom-color: var(--accent-color);
   color: var(--accent-color);
+}
+
+.read-more:visited {
+  color: var(--primary-color);
+  opacity: 0.9;
+}
+
+.read-more:active {
+  color: var(--accent-color);
+  transform: translateY(1px);
 }
 
 /* Loading States */

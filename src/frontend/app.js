@@ -493,10 +493,12 @@ class BlogApp {
   }
 
   updatePageHeader() {
+    const hero = document.querySelector('.hero');
     const heroTitle = document.querySelector('.hero-title');
     const heroSubtitle = document.querySelector('.hero-subtitle');
     
     if (this.currentSearch) {
+      hero.style.display = 'block';
       heroTitle.textContent = `Résultats de recherche`;
       heroSubtitle.innerHTML = `
         <div class="search-results-info">
@@ -516,6 +518,7 @@ class BlogApp {
         });
       }
     } else if (this.currentTag) {
+      hero.style.display = 'block';
       heroTitle.textContent = `Articles avec le tag "${this.currentTag}"`;
       heroSubtitle.innerHTML = `
         <button class="clear-filter-btn" id="clear-filter-button">
@@ -532,8 +535,8 @@ class BlogApp {
         });
       }
     } else {
-      heroTitle.textContent = 'Blue Archer';
-      heroSubtitle.textContent = 'Mon univers : technologie, jeux-vidéo, idées et pensées';
+      // Hide hero section when showing all posts
+      hero.style.display = 'none';
     }
   }
 
@@ -550,9 +553,6 @@ class BlogApp {
   }
 
   showEndIndicator() {
-    const indicator = document.getElementById('end-indicator');
-    indicator.style.display = 'block';
-    
     // Hide loading indicator
     const loadingIndicator = document.getElementById('loading-indicator');
     loadingIndicator.style.display = 'none';

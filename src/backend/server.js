@@ -109,8 +109,8 @@ function initializePostsWatcher() {
   }
   
   try {
-    postsWatcher = fsSync.watch(POSTS_DIR, { recursive: false }, (eventType, filename) => {
-      if (filename && filename.endsWith('.md')) {
+    postsWatcher = fsSync.watch(POSTS_DIR, { recursive: true }, (eventType, filename) => {
+      if (filename && (filename.endsWith('.md') || filename.endsWith('index.md'))) {
         console.log(`📝 Post ${eventType}: ${filename} - refreshing cache`);
         postsCache = null; // Invalidate cache immediately
       }
@@ -134,22 +134,43 @@ async function checkForDirectoryChanges() {
   lastDirectoryCheck = now;
   
   try {
-    const files = await fs.readdir(POSTS_DIR);
-    const markdownFiles = files.filter(file => file.endsWith('.md'));
+    const entries = await fs.readdir(POSTS_DIR, { withFileTypes: true });
+    const postDirs = entries.filter(entry => entry.isDirectory());
+    const markdownFiles = entries.filter(entry => entry.isFile() && entry.name.endsWith('.md'));
     
     let hasChanges = false;
     const currentStats = new Map();
     
+    // Check standalone markdown files
     for (const file of markdownFiles) {
-      const filePath = path.join(POSTS_DIR, file);
+      const filePath = path.join(POSTS_DIR, file.name);
       const stats = await fs.stat(filePath);
       const lastModified = stats.mtime.getTime();
       
-      currentStats.set(file, lastModified);
+      currentStats.set(file.name, lastModified);
       
-      if (!directoryStats.has(file) || directoryStats.get(file) !== lastModified) {
+      if (!directoryStats.has(file.name) || directoryStats.get(file.name) !== lastModified) {
         hasChanges = true;
-        console.log(`📝 Post change detected: ${file}`);
+        console.log(`📝 Post change detected: ${file.name}`);
+      }
+    }
+    
+    // Check directory-based posts with index.md
+    for (const dir of postDirs) {
+      const indexPath = path.join(POSTS_DIR, dir.name, 'index.md');
+      try {
+        const stats = await fs.stat(indexPath);
+        const lastModified = stats.mtime.getTime();
+        const key = `${dir.name}/index.md`;
+        
+        currentStats.set(key, lastModified);
+        
+        if (!directoryStats.has(key) || directoryStats.get(key) !== lastModified) {
+          hasChanges = true;
+          console.log(`📝 Post change detected: ${key}`);
+        }
+      } catch (error) {
+        // index.md doesn't exist in this directory
       }
     }
     
@@ -184,53 +205,29 @@ async function loadPosts() {
     await createSamplePosts();
   }
 
-  const files = await fs.readdir(POSTS_DIR);
-  const markdownFiles = files.filter(file => file.endsWith('.md'));
+  const entries = await fs.readdir(POSTS_DIR, { withFileTypes: true });
+  const posts = [];
   
-  const posts = await Promise.all(
-    markdownFiles.map(async (file) => {
-      const filePath = path.join(POSTS_DIR, file);
-      const content = await fs.readFile(filePath, 'utf-8');
-      const stats = await fs.stat(filePath);
-      
-      // Parse frontmatter (basic implementation)
-      const frontmatterMatch = content.match(/^---\n([\s\S]*?)\n---\n([\s\S]*)$/);
-      let metadata = {};
-      let markdownContent = content;
-      
-      if (frontmatterMatch) {
-        const frontmatter = frontmatterMatch[1];
-        markdownContent = frontmatterMatch[2];
-        
-        // Parse YAML-like frontmatter
-        frontmatter.split('\n').forEach(line => {
-          const [key, ...valueParts] = line.split(':');
-          if (key && valueParts.length) {
-            const value = valueParts.join(':').trim().replace(/^["']|["']$/g, '');
-            if (key.trim() === 'tags' && value.includes(',')) {
-              metadata[key.trim()] = value;
-            } else {
-              metadata[key.trim()] = value;
-            }
-          }
-        });
-      }
-      
-      const htmlContent = marked(markdownContent);
-      const excerpt = markdownContent.substring(0, 200) + '...';
-      
-      return {
-        id: path.basename(file, '.md'),
-        title: metadata.title || path.basename(file, '.md').replace(/-/g, ' '),
-        author: metadata.author || 'Anonymous',
-        date: metadata.date || stats.birthtime.toISOString().split('T')[0],
-        tags: metadata.tags ? parseTags(metadata.tags) : [],
-        excerpt: metadata.excerpt || excerpt,
-        content: htmlContent,
-        readTime: Math.ceil(markdownContent.split(' ').length / 200) // ~200 words per minute
-      };
-    })
-  );
+  // Process standalone markdown files
+  const markdownFiles = entries.filter(entry => entry.isFile() && entry.name.endsWith('.md'));
+  for (const file of markdownFiles) {
+    const filePath = path.join(POSTS_DIR, file.name);
+    const post = await parsePost(filePath, file.name);
+    if (post) posts.push(post);
+  }
+  
+  // Process directory-based posts with index.md
+  const directories = entries.filter(entry => entry.isDirectory());
+  for (const dir of directories) {
+    const indexPath = path.join(POSTS_DIR, dir.name, 'index.md');
+    try {
+      await fs.access(indexPath);
+      const post = await parsePost(indexPath, dir.name);
+      if (post) posts.push(post);
+    } catch {
+      // No index.md in this directory, skip
+    }
+  }
   
   // Sort by date (newest first)
   posts.sort((a, b) => new Date(b.date) - new Date(a.date));
@@ -238,6 +235,77 @@ async function loadPosts() {
   postsCache = posts;
   
   return posts;
+}
+
+// Parse a single post file
+async function parsePost(filePath, identifier) {
+  try {
+    const content = await fs.readFile(filePath, 'utf-8');
+    const stats = await fs.stat(filePath);
+    
+    // Extract the post directory for relative image paths
+    const postDir = path.dirname(filePath);
+    const postDirName = path.basename(postDir);
+    const isDirectoryPost = path.basename(filePath) === 'index.md';
+    
+    // Parse frontmatter
+    const frontmatterMatch = content.match(/^---\n([\s\S]*?)\n---\n([\s\S]*)$/);
+    let metadata = {};
+    let markdownContent = content;
+    
+    if (frontmatterMatch) {
+      const frontmatter = frontmatterMatch[1];
+      markdownContent = frontmatterMatch[2];
+      
+      // Parse YAML-like frontmatter
+      frontmatter.split('\n').forEach(line => {
+        const [key, ...valueParts] = line.split(':');
+        if (key && valueParts.length) {
+          const value = valueParts.join(':').trim().replace(/^["']|["']$/g, '');
+          if (key.trim() === 'tags' && value.includes(',')) {
+            metadata[key.trim()] = value;
+          } else {
+            metadata[key.trim()] = value;
+          }
+        }
+      });
+    }
+    
+    // Process markdown with relative image support
+    let processedMarkdown = markdownContent;
+    if (isDirectoryPost) {
+      // Replace relative image paths with absolute paths
+      processedMarkdown = markdownContent.replace(
+        /!\[([^\]]*)\]\((?!http)([^)]+)\)/g,
+        (match, alt, src) => {
+          // Convert relative path to absolute path
+          const imagePath = `/api/posts/${postDirName}/assets/${src}`;
+          return `![${alt}](${imagePath})`;
+        }
+      );
+    }
+    
+    const htmlContent = marked(processedMarkdown);
+    const excerpt = markdownContent.substring(0, 200) + '...';
+    
+    // Use directory name or filename as ID
+    const postId = isDirectoryPost ? postDirName : path.basename(identifier, '.md');
+    
+    return {
+      id: postId,
+      title: metadata.title || postId.replace(/-/g, ' '),
+      author: metadata.author || 'Anonymous',
+      date: metadata.date || stats.birthtime.toISOString().split('T')[0],
+      tags: metadata.tags ? parseTags(metadata.tags) : [],
+      excerpt: metadata.excerpt || excerpt,
+      content: htmlContent,
+      readTime: Math.ceil(markdownContent.split(' ').length / 200),
+      isDirectoryPost
+    };
+  } catch (error) {
+    console.error(`Error parsing post ${filePath}:`, error);
+    return null;
+  }
 }
 
 // Create sample posts
@@ -539,6 +607,36 @@ app.get('/api/search', async (req, res) => {
     });
   } catch (error) {
     console.error('Error searching posts:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
+// Serve assets (images) from post directories
+app.get('/api/posts/:postId/assets/*', async (req, res) => {
+  try {
+    const postId = req.params.postId;
+    const assetPath = req.params[0]; // Get the rest of the path after /assets/
+    
+    // Construct the full path to the asset
+    const fullPath = path.join(POSTS_DIR, postId, assetPath);
+    
+    // Security: Ensure the path doesn't escape the post directory
+    const resolvedPath = path.resolve(fullPath);
+    const postDir = path.resolve(path.join(POSTS_DIR, postId));
+    
+    if (!resolvedPath.startsWith(postDir)) {
+      return res.status(403).json({ error: 'Access denied' });
+    }
+    
+    // Check if file exists
+    try {
+      await fs.access(resolvedPath);
+      res.sendFile(resolvedPath);
+    } catch {
+      res.status(404).json({ error: 'Asset not found' });
+    }
+  } catch (error) {
+    console.error('Error serving asset:', error);
     res.status(500).json({ error: 'Internal server error' });
   }
 });
