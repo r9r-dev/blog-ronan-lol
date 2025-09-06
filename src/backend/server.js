@@ -102,77 +102,14 @@ function parseTags(tagsString) {
   ).filter(tag => tag.length > 0);
 }
 
-// Initialize file watcher for posts directory with cross-platform compatibility
+// Simple polling-based file watching (works on all platforms)
 function initializePostsWatcher() {
-  if (postsWatcher) {
-    postsWatcher.close();
-  }
+  console.log(`👀 Monitoring posts directory with polling: ${POSTS_DIR}`);
   
-  try {
-    // First try recursive watching (macOS/Windows)
-    postsWatcher = fsSync.watch(POSTS_DIR, { recursive: true }, (eventType, filename) => {
-      if (filename && (filename.endsWith('.md') || filename.endsWith('index.md'))) {
-        console.log(`📝 Post ${eventType}: ${filename} - refreshing cache`);
-        postsCache = null; // Invalidate cache immediately
-      }
-    });
-    console.log(`👀 Watching posts directory recursively: ${POSTS_DIR}`);
-  } catch (error) {
-    if (error.message.includes('recursively') || error.message.includes('recursive')) {
-      console.log('📁 Recursive watching not supported, using non-recursive mode');
-      try {
-        // Fallback to non-recursive watching and watch subdirectories manually
-        postsWatcher = fsSync.watch(POSTS_DIR, (eventType, filename) => {
-          if (filename && (filename.endsWith('.md') || filename.endsWith('index.md'))) {
-            console.log(`📝 Post ${eventType}: ${filename} - refreshing cache`);
-            postsCache = null; // Invalidate cache immediately
-          }
-        });
-        
-        // Also watch each subdirectory (for folder-based posts)
-        watchPostSubdirectories();
-        console.log(`👀 Watching posts directory (non-recursive): ${POSTS_DIR}`);
-      } catch (fallbackError) {
-        console.warn('⚠️  Could not watch posts directory:', fallbackError.message);
-        console.log('📊 Using polling fallback only');
-      }
-    } else {
-      console.warn('⚠️  Could not watch posts directory:', error.message);
-    }
-  }
-  
-  // Polling fallback for volume mounts (checks every 2 seconds)
+  // Check for changes every 2 seconds
   setInterval(async () => {
     await checkForDirectoryChanges();
   }, 2000);
-}
-
-// Watch subdirectories for folder-based posts (Linux compatibility)
-function watchPostSubdirectories() {
-  try {
-    const entries = fsSync.readdirSync(POSTS_DIR, { withFileTypes: true });
-    const directories = entries.filter(entry => entry.isDirectory());
-    
-    directories.forEach(dir => {
-      const dirPath = path.join(POSTS_DIR, dir.name);
-      try {
-        fsSync.watch(dirPath, (eventType, filename) => {
-          if (filename && (filename.endsWith('.md') || filename.endsWith('index.md'))) {
-            console.log(`📝 Post ${eventType}: ${dir.name}/${filename} - refreshing cache`);
-            postsCache = null; // Invalidate cache immediately
-          }
-        });
-      } catch (error) {
-        console.warn(`⚠️  Could not watch subdirectory ${dir.name}:`, error.message);
-      }
-    });
-    
-    if (directories.length > 0) {
-      console.log(`👀 Watching ${directories.length} post subdirectories`);
-    }
-  } catch (error) {
-    console.warn('⚠️  Could not read posts directory for subdirectory watching:', error.message);
-  }
 }
 
 // Check for directory changes (polling fallback)
@@ -204,22 +141,30 @@ async function checkForDirectoryChanges() {
       }
     }
     
-    // Check directory-based posts with index.md
+    // Check directory-based posts (any .md files in subdirectories)
     for (const dir of postDirs) {
-      const indexPath = path.join(POSTS_DIR, dir.name, 'index.md');
       try {
-        const stats = await fs.stat(indexPath);
-        const lastModified = stats.mtime.getTime();
-        const key = `${dir.name}/index.md`;
+        const dirPath = path.join(POSTS_DIR, dir.name);
+        const dirEntries = await fs.readdir(dirPath, { withFileTypes: true });
+        const markdownFilesInDir = dirEntries.filter(entry => 
+          entry.isFile() && entry.name.endsWith('.md')
+        );
         
-        currentStats.set(key, lastModified);
-        
-        if (!directoryStats.has(key) || directoryStats.get(key) !== lastModified) {
-          hasChanges = true;
-          console.log(`📝 Post change detected: ${key}`);
+        for (const mdFile of markdownFilesInDir) {
+          const filePath = path.join(dirPath, mdFile.name);
+          const stats = await fs.stat(filePath);
+          const lastModified = stats.mtime.getTime();
+          const key = `${dir.name}/${mdFile.name}`;
+          
+          currentStats.set(key, lastModified);
+          
+          if (!directoryStats.has(key) || directoryStats.get(key) !== lastModified) {
+            hasChanges = true;
+            console.log(`📝 Post change detected: ${key}`);
+          }
         }
       } catch (error) {
-        // index.md doesn't exist in this directory
+        console.warn(`⚠️  Could not check directory ${dir.name}:`, error.message);
       }
     }
     
@@ -265,16 +210,24 @@ async function loadPosts() {
     if (post) posts.push(post);
   }
   
-  // Process directory-based posts with index.md
+  // Process directory-based posts (any .md file in subdirectories)
   const directories = entries.filter(entry => entry.isDirectory());
   for (const dir of directories) {
-    const indexPath = path.join(POSTS_DIR, dir.name, 'index.md');
     try {
-      await fs.access(indexPath);
-      const post = await parsePost(indexPath, dir.name);
-      if (post) posts.push(post);
-    } catch {
-      // No index.md in this directory, skip
+      const dirPath = path.join(POSTS_DIR, dir.name);
+      const dirEntries = await fs.readdir(dirPath, { withFileTypes: true });
+      const markdownFilesInDir = dirEntries.filter(entry => 
+        entry.isFile() && entry.name.endsWith('.md')
+      );
+      
+      // Process each markdown file in the directory
+      for (const mdFile of markdownFilesInDir) {
+        const filePath = path.join(dirPath, mdFile.name);
+        const post = await parsePost(filePath, dir.name);
+        if (post) posts.push(post);
+      }
+    } catch (error) {
+      console.warn(`⚠️  Could not read directory ${dir.name}:`, error.message);
     }
   }
   
