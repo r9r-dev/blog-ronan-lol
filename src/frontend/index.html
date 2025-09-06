@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="fr" data-theme="cyberpunk">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -31,14 +31,21 @@
                     <a href="/">ronan.lol</a>
                 </h1>
                 <nav class="nav">
-                    <div class="search-container">
-                        <input type="text" 
-                               id="search-input" 
-                               class="search-input" 
-                               placeholder="Rechercher..." 
-                               autocomplete="off">
-                        <div class="search-icon">🔍</div>
-                        <button class="search-clear" id="search-clear" style="display: none;">×</button>
+                    <div class="nav-controls">
+                        <div class="theme-toggle">
+                            <button id="theme-toggle" class="theme-toggle-btn" aria-label="Changer de thème">
+                                <span class="theme-icon">🎨</span>
+                            </button>
+                        </div>
+                        <div class="search-container">
+                            <input type="text" 
+                                   id="search-input" 
+                                   class="search-input" 
+                                   placeholder="Rechercher..." 
+                                   autocomplete="off">
+                            <div class="search-icon">🔍</div>
+                            <button class="search-clear" id="search-clear" style="display: none;">×</button>
+                        </div>
                     </div>
                 </nav>
             </div>
