@@ -24,6 +24,7 @@ class BlogApp {
     this.setupIntersectionObserver();
     this.loadTags(); // Load available tags
     this.loadInitialPosts();
+    this.loadVersionInfo(); // Load version info
   }
 
   // Modern dark theme implementation - no switching required
@@ -127,6 +128,23 @@ class BlogApp {
       }
     } catch (error) {
       console.error('Error loading tags:', error);
+    }
+  }
+
+  async loadVersionInfo() {
+    try {
+      const response = await fetch('/api/version');
+      if (response.ok) {
+        const data = await response.json();
+        const versionElement = document.getElementById('version-info');
+        if (versionElement) {
+          versionElement.textContent = `v${data.version}`;
+          versionElement.style.opacity = '0.7';
+          versionElement.style.fontSize = '0.9em';
+        }
+      }
+    } catch (error) {
+      console.error('Error loading version:', error);
     }
   }
 

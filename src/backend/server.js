@@ -458,6 +458,15 @@ This approach ensures smooth scrolling performance across all devices while main
 
 // API Routes
 
+// Get application version
+app.get('/api/version', (req, res) => {
+  const packageJson = require('../package.json');
+  res.json({ 
+    version: packageJson.version,
+    name: packageJson.name 
+  });
+});
+
 // Get paginated posts
 app.get('/api/posts', async (req, res) => {
   try {
