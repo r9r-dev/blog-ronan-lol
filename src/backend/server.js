@@ -13,8 +13,11 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 const POSTS_DIR = path.join(__dirname, '../shared/posts');
 
-// Trust proxy - needed when running behind a proxy/container
-app.set('trust proxy', true);
+// Trust proxy - only enable if explicitly needed
+// For Pangolin/tunnel scenarios, this is typically not required
+if (process.env.TRUST_PROXY) {
+  app.set('trust proxy', process.env.TRUST_PROXY);
+}
 
 // Security middleware
 app.use(helmet({
