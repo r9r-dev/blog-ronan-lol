@@ -183,8 +183,7 @@ a:active {
   text-decoration: none;
   transition: var(--transition);
   position: relative;
-  text-shadow: var(--text-glow);
-  animation: logo-glow 3s ease-in-out infinite;
+  animation: glitch 0.5s infinite, logo-glow 3s ease-in-out infinite;
 }
 
 @keyframes logo-glow {
@@ -198,7 +197,7 @@ a:active {
 
 .logo a:hover {
   transform: scale(1.05);
-  animation: glitch 0.3s infinite;
+  animation: glitch 0.2s infinite, logo-glow 1.5s ease-in-out infinite;
 }
 
 @keyframes glitch {
