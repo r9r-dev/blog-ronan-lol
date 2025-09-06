@@ -20,7 +20,6 @@ class BlogApp {
   }
 
   init() {
-    this.loadThemePreference(); // Load theme first
     this.setupEventListeners();
     this.setupIntersectionObserver();
     this.loadTags(); // Load available tags
@@ -28,14 +27,8 @@ class BlogApp {
     this.loadVersionInfo(); // Load version info
   }
 
-  // Modern dark theme implementation - no switching required
-
   // Event Listeners
   setupEventListeners() {
-    // Theme toggle
-    const themeToggle = document.getElementById('theme-toggle');
-    themeToggle?.addEventListener('click', () => this.toggleTheme());
-
     // Scroll to top
     const scrollTopBtn = document.getElementById('scroll-top');
     scrollTopBtn?.addEventListener('click', () => this.scrollToTop());
@@ -697,36 +690,6 @@ class BlogApp {
       day: 'numeric' 
     };
     return date.toLocaleDateString('fr-FR', options);
-  }
-
-  // Theme Management
-  toggleTheme() {
-    const html = document.documentElement;
-    const currentTheme = html.getAttribute('data-theme');
-    const newTheme = currentTheme === 'cyberpunk' ? 'geometric' : 'cyberpunk';
-    
-    html.setAttribute('data-theme', newTheme);
-    
-    // Save theme preference
-    localStorage.setItem('preferred-theme', newTheme);
-    
-    // Update theme icon
-    this.updateThemeIcon(newTheme);
-  }
-  
-  updateThemeIcon(theme) {
-    const themeIcon = document.querySelector('.theme-icon');
-    if (themeIcon) {
-      themeIcon.textContent = theme === 'cyberpunk' ? '🎨' : '⚡';
-    }
-  }
-  
-  loadThemePreference() {
-    const savedTheme = localStorage.getItem('preferred-theme');
-    if (savedTheme) {
-      document.documentElement.setAttribute('data-theme', savedTheme);
-      this.updateThemeIcon(savedTheme);
-    }
   }
 
   // Performance monitoring
