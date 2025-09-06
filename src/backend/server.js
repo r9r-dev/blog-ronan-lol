@@ -102,28 +102,77 @@ function parseTags(tagsString) {
   ).filter(tag => tag.length > 0);
 }
 
-// Initialize file watcher for posts directory with polling fallback
+// Initialize file watcher for posts directory with cross-platform compatibility
 function initializePostsWatcher() {
   if (postsWatcher) {
     postsWatcher.close();
   }
   
   try {
+    // First try recursive watching (macOS/Windows)
     postsWatcher = fsSync.watch(POSTS_DIR, { recursive: true }, (eventType, filename) => {
       if (filename && (filename.endsWith('.md') || filename.endsWith('index.md'))) {
         console.log(`📝 Post ${eventType}: ${filename} - refreshing cache`);
         postsCache = null; // Invalidate cache immediately
       }
     });
-    console.log(`👀 Watching posts directory: ${POSTS_DIR}`);
+    console.log(`👀 Watching posts directory recursively: ${POSTS_DIR}`);
   } catch (error) {
-    console.warn('⚠️  Could not watch posts directory:', error.message);
+    if (error.message.includes('recursively') || error.message.includes('recursive')) {
+      console.log('📁 Recursive watching not supported, using non-recursive mode');
+      try {
+        // Fallback to non-recursive watching and watch subdirectories manually
+        postsWatcher = fsSync.watch(POSTS_DIR, (eventType, filename) => {
+          if (filename && (filename.endsWith('.md') || filename.endsWith('index.md'))) {
+            console.log(`📝 Post ${eventType}: ${filename} - refreshing cache`);
+            postsCache = null; // Invalidate cache immediately
+          }
+        });
+        
+        // Also watch each subdirectory (for folder-based posts)
+        watchPostSubdirectories();
+        console.log(`👀 Watching posts directory (non-recursive): ${POSTS_DIR}`);
+      } catch (fallbackError) {
+        console.warn('⚠️  Could not watch posts directory:', fallbackError.message);
+        console.log('📊 Using polling fallback only');
+      }
+    } else {
+      console.warn('⚠️  Could not watch posts directory:', error.message);
+    }
   }
   
   // Polling fallback for volume mounts (checks every 2 seconds)
   setInterval(async () => {
     await checkForDirectoryChanges();
   }, 2000);
+}
+
+// Watch subdirectories for folder-based posts (Linux compatibility)
+function watchPostSubdirectories() {
+  try {
+    const entries = fsSync.readdirSync(POSTS_DIR, { withFileTypes: true });
+    const directories = entries.filter(entry => entry.isDirectory());
+    
+    directories.forEach(dir => {
+      const dirPath = path.join(POSTS_DIR, dir.name);
+      try {
+        fsSync.watch(dirPath, (eventType, filename) => {
+          if (filename && (filename.endsWith('.md') || filename.endsWith('index.md'))) {
+            console.log(`📝 Post ${eventType}: ${dir.name}/${filename} - refreshing cache`);
+            postsCache = null; // Invalidate cache immediately
+          }
+        });
+      } catch (error) {
+        console.warn(`⚠️  Could not watch subdirectory ${dir.name}:`, error.message);
+      }
+    });
+    
+    if (directories.length > 0) {
+      console.log(`👀 Watching ${directories.length} post subdirectories`);
+    }
+  } catch (error) {
+    console.warn('⚠️  Could not read posts directory for subdirectory watching:', error.message);
+  }
 }
 
 // Check for directory changes (polling fallback)
