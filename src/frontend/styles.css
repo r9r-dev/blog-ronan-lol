@@ -988,12 +988,14 @@ a:active {
   color: var(--accent-color);
 }
 
-/* Geometric Code - Style propre */
+/* Geometric Code - Style propre et contrasté */
 :root[data-theme="geometric"] .post-content code {
-  background: #f5f5f5;
-  color: var(--primary-color);
+  background: #f8f9fa;
+  color: #e91e63;
   border: 1px solid #e0e0e0;
-  border-radius: var(--border-radius-sm);
+  border-radius: 6px;
+  font-weight: 500;
+  padding: 0.2rem 0.4rem;
 }
 
 .post-content pre {
@@ -1011,11 +1013,13 @@ a:active {
   color: inherit;
 }
 
-/* Geometric Code Blocks - Style propre */
-:root[data-theme="geometric"] .post-content pre {
-  background: #f8f9fa;
+/* Geometric Code Blocks - Style propre avec override de highlight.js */
+:root[data-theme="geometric"] .post-content pre,
+:root[data-theme="geometric"] .post-content pre.hljs {
+  background: #f8f9fa !important;
   border: 1px solid #e0e0e0;
   border-radius: var(--border-radius-sm);
+  color: #333333 !important;
   clip-path: polygon(
     0 0,
     calc(100% - 8px) 0,
@@ -1024,6 +1028,61 @@ a:active {
     8px 100%,
     0 calc(100% - 8px)
   );
+}
+
+/* Geometric Code in Pre Blocks - Override complet de highlight.js */
+:root[data-theme="geometric"] .post-content pre code,
+:root[data-theme="geometric"] .post-content pre.hljs code {
+  color: #333333 !important;
+  font-weight: 400;
+  background: transparent !important;
+}
+
+/* Override des classes de highlight.js pour le thème géométrique */
+:root[data-theme="geometric"] .hljs-comment,
+:root[data-theme="geometric"] .hljs-quote {
+  color: #6a737d !important;
+  font-style: italic;
+}
+
+:root[data-theme="geometric"] .hljs-keyword,
+:root[data-theme="geometric"] .hljs-selector-tag,
+:root[data-theme="geometric"] .hljs-subst {
+  color: #d73a49 !important;
+  font-weight: 600;
+}
+
+:root[data-theme="geometric"] .hljs-number,
+:root[data-theme="geometric"] .hljs-literal,
+:root[data-theme="geometric"] .hljs-variable,
+:root[data-theme="geometric"] .hljs-template-variable {
+  color: #005cc5 !important;
+}
+
+:root[data-theme="geometric"] .hljs-string,
+:root[data-theme="geometric"] .hljs-doctag {
+  color: #032f62 !important;
+}
+
+:root[data-theme="geometric"] .hljs-function,
+:root[data-theme="geometric"] .hljs-title,
+:root[data-theme="geometric"] .hljs-section,
+:root[data-theme="geometric"] .hljs-selector-id {
+  color: #6f42c1 !important;
+  font-weight: 600;
+}
+
+:root[data-theme="geometric"] .hljs-tag {
+  color: #22863a !important;
+}
+
+:root[data-theme="geometric"] .hljs-name,
+:root[data-theme="geometric"] .hljs-attribute {
+  color: #005cc5 !important;
+}
+
+:root[data-theme="geometric"] .hljs-attr {
+  color: #6f42c1 !important;
 }
 
 .read-more {
