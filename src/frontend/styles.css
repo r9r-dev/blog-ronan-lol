@@ -48,6 +48,7 @@
   
   /* Typography */
   --font-family: 'Orbitron', 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-content: 'Montserrat', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   --font-mono: 'JetBrains Mono', 'Fira Code', 'SF Mono', Monaco, monospace;
   
   /* Animations */
@@ -539,12 +540,21 @@ a:active {
   color: var(--text-secondary);
   line-height: 1.7;
   margin-bottom: 1.5rem;
+  font-family: var(--font-content);
+  font-weight: 400;
+  letter-spacing: normal;
+  text-transform: none;
 }
 
 .post-content {
   color: var(--text-primary);
   line-height: 1.7;
   margin-bottom: 1.5rem;
+  font-family: var(--font-content);
+  font-weight: 400;
+  font-size: 1rem;
+  letter-spacing: normal;
+  text-transform: none;
 }
 
 /* Content Styling */
@@ -555,9 +565,13 @@ a:active {
 .post-content h5,
 .post-content h6 {
   color: var(--text-primary);
-  margin: 1.5rem 0 1rem 0;
+  margin: 2rem 0 1rem 0;
   font-weight: 700;
   line-height: 1.3;
+  font-family: var(--font-family);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  text-shadow: 0 0 10px rgba(191, 0, 255, 0.5);
 }
 
 .post-content h1 { font-size: 2rem; }
@@ -566,7 +580,8 @@ a:active {
 .post-content h4 { font-size: 1.25rem; }
 
 .post-content p {
-  margin-bottom: 1rem;
+  margin-bottom: 1.2rem;
+  font-weight: 400;
 }
 
 /* Links Styling */
@@ -601,18 +616,26 @@ a:active {
 .post-content ol {
   margin: 1rem 0;
   padding-left: 2rem;
+  font-family: var(--font-content);
 }
 
 .post-content li {
   margin-bottom: 0.5rem;
+  color: var(--text-secondary);
+  font-weight: 400;
 }
 
 .post-content blockquote {
-  border-left: 4px solid var(--primary-color);
-  padding-left: 1rem;
+  border-left: 4px solid var(--neon-purple);
+  padding: 1rem 1.5rem;
   margin: 1.5rem 0;
-  font-style: italic;
+  background: rgba(191, 0, 255, 0.05);
+  border-radius: var(--border-radius);
   color: var(--text-secondary);
+  font-style: italic;
+  font-family: var(--font-content);
+  font-weight: 300;
+  box-shadow: 0 0 20px rgba(191, 0, 255, 0.1);
 }
 
 .post-content code {
