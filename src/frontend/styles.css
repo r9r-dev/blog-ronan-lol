@@ -424,17 +424,15 @@ a:active {
 }
 
 .post-card:hover {
-  transform: translateY(-5px) scale(1.02);
-  border-color: var(--neon-purple);
+  transform: translateY(-3px);
+  border-color: rgba(191, 0, 255, 0.5);
   box-shadow: 
-    0 10px 40px rgba(191, 0, 255, 0.3),
-    0 0 60px rgba(191, 0, 255, 0.2),
-    inset 0 0 60px rgba(191, 0, 255, 0.1);
+    0 5px 20px rgba(191, 0, 255, 0.15),
+    0 0 30px rgba(191, 0, 255, 0.1);
 }
 
 .post-card:hover::after {
-  opacity: 0.5;
-  animation: neon-border-pulse 1.5s ease-in-out infinite;
+  opacity: 0.2;
 }
 
 @keyframes neon-border-pulse {
