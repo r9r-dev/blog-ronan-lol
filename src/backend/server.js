@@ -127,8 +127,13 @@ async function checkForDirectoryChanges() {
     let hasChanges = false;
     const currentStats = new Map();
     
-    // Check standalone markdown files
+    // Check standalone markdown files (excluding macOS metadata files)
     for (const file of markdownFiles) {
+      // Skip macOS metadata files
+      if (file.name.startsWith('._')) {
+        continue;
+      }
+      
       const filePath = path.join(POSTS_DIR, file.name);
       const stats = await fs.stat(filePath);
       const lastModified = stats.mtime.getTime();
@@ -151,6 +156,11 @@ async function checkForDirectoryChanges() {
         );
         
         for (const mdFile of markdownFilesInDir) {
+          // Skip macOS metadata files
+          if (mdFile.name.startsWith('._')) {
+            continue;
+          }
+          
           const filePath = path.join(dirPath, mdFile.name);
           const stats = await fs.stat(filePath);
           const lastModified = stats.mtime.getTime();
@@ -202,8 +212,12 @@ async function loadPosts() {
   const entries = await fs.readdir(POSTS_DIR, { withFileTypes: true });
   const posts = [];
   
-  // Process standalone markdown files
-  const markdownFiles = entries.filter(entry => entry.isFile() && entry.name.endsWith('.md'));
+  // Process standalone markdown files (excluding macOS metadata files)
+  const markdownFiles = entries.filter(entry => 
+    entry.isFile() && 
+    entry.name.endsWith('.md') && 
+    !entry.name.startsWith('._')
+  );
   for (const file of markdownFiles) {
     const filePath = path.join(POSTS_DIR, file.name);
     const post = await parsePost(filePath, file.name);
@@ -217,7 +231,9 @@ async function loadPosts() {
       const dirPath = path.join(POSTS_DIR, dir.name);
       const dirEntries = await fs.readdir(dirPath, { withFileTypes: true });
       const markdownFilesInDir = dirEntries.filter(entry => 
-        entry.isFile() && entry.name.endsWith('.md')
+        entry.isFile() && 
+        entry.name.endsWith('.md') && 
+        !entry.name.startsWith('._')
       );
       
       // Process each markdown file in the directory
