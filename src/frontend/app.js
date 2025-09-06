@@ -323,6 +323,17 @@ class BlogApp {
       this.goBack();
     });
 
+    // Add click handlers for tags in full post
+    const tagElements = article.querySelectorAll('[data-tag]');
+    tagElements.forEach(tagElement => {
+      tagElement.addEventListener('click', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        const tag = tagElement.getAttribute('data-tag');
+        this.filterByTag(tag);
+      });
+    });
+
     container.appendChild(article);
     this.scrollToTop();
     
