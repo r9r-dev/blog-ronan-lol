@@ -197,24 +197,43 @@ class BlogApp {
   // UI Rendering
   renderPosts(posts) {
     const container = document.getElementById('blog-posts');
-    
+
+    // Check if this is the first batch of posts (page 1)
+    const isFirstPage = this.currentPage === 1;
+
     posts.forEach((post, index) => {
-      const postElement = this.createPostElement(post);
+      const globalIndex = this.posts.length - posts.length + index;
+      const isFeatured = isFirstPage && globalIndex === 0;
+      const postElement = this.createPostElement(post, isFeatured);
       postElement.style.animationDelay = `${index * 0.1}s`;
-      container.appendChild(postElement);
+
+      if (isFeatured) {
+        // Featured post goes directly in container
+        container.appendChild(postElement);
+      } else {
+        // Regular posts go in grid
+        let grid = container.querySelector('.posts-grid');
+        if (!grid) {
+          grid = document.createElement('div');
+          grid.className = 'posts-grid';
+          container.appendChild(grid);
+        }
+        grid.appendChild(postElement);
+      }
     });
   }
 
-  createPostElement(post) {
+  createPostElement(post, isFeatured = false) {
     const article = document.createElement('article');
-    article.className = 'post-card';
+    article.className = isFeatured ? 'post-card featured' : 'post-card';
     article.setAttribute('data-post-id', post.id);
 
-    const tagsHtml = post.tags?.length ? 
+    const tagsHtml = post.tags?.length ?
       post.tags.map(tag => `<span class="post-tag" data-tag="${this.escapeHtml(tag)}">${this.escapeHtml(tag)}</span>`).join('') : '';
 
-    const excerpt = post.content ? 
-      this.truncateHtml(post.content, 300) : post.excerpt || '';
+    const excerptLength = isFeatured ? 500 : 300;
+    const excerpt = post.content ?
+      this.truncateHtml(post.content, excerptLength) : post.excerpt || '';
 
     article.innerHTML = `
       <header class="post-header">
@@ -619,10 +638,9 @@ class BlogApp {
       top: 20px;
       right: 20px;
       padding: 1rem 1.5rem;
-      background: var(--bg-card);
+      background: var(--bg-secondary);
       border: 1px solid var(--border-color);
       border-radius: var(--border-radius);
-      box-shadow: var(--shadow-lg);
       z-index: 10000;
       animation: slideInRight 0.3s ease-out;
     `;
@@ -1002,75 +1020,6 @@ style.textContent = `
     to {
       transform: translateX(100%);
       opacity: 0;
-    }
-  }
-
-  .back-button {
-    background: var(--bg-secondary);
-    border: 1px solid var(--border-color);
-    padding: 0.75rem 1.5rem;
-    border-radius: var(--border-radius);
-    cursor: pointer;
-    transition: var(--transition);
-    margin-bottom: 1.5rem;
-    color: var(--text-primary);
-    font-weight: 600;
-    backdrop-filter: blur(10px);
-  }
-
-  .back-button:hover {
-    background: var(--gradient-primary);
-    color: white;
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
-  }
-
-  .post-full .post-title {
-    font-size: 2.5rem;
-    margin-bottom: 1rem;
-  }
-
-  /* Tag styling */
-  .post-tag {
-    cursor: pointer;
-    transition: var(--transition);
-    position: relative;
-  }
-
-  .post-tag:hover {
-    background: linear-gradient(135deg, #c084fc, #f472b6);
-    color: white;
-    transform: translateY(-1px);
-    box-shadow: 0 2px 8px rgba(196, 132, 252, 0.4);
-  }
-
-  .post-tag:active {
-    transform: translateY(0);
-  }
-
-  /* Clear filter button */
-  .clear-filter-btn {
-    background: var(--bg-secondary);
-    border: 1px solid var(--border-color);
-    padding: 0.5rem 1rem;
-    border-radius: var(--border-radius);
-    cursor: pointer;
-    transition: var(--transition);
-    color: var(--text-primary);
-    font-weight: 500;
-    backdrop-filter: blur(10px);
-  }
-
-  .clear-filter-btn:hover {
-    background: var(--gradient-primary);
-    color: white;
-    transform: translateY(-1px);
-    box-shadow: 0 2px 8px rgba(59, 130, 246, 0.3);
-  }
-
-  @media (max-width: 768px) {
-    .post-full .post-title {
-      font-size: 2rem;
     }
   }
 `;
