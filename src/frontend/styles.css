@@ -6,7 +6,7 @@
 /* Custom Font Face */
 @font-face {
   font-family: 'Iki Mono';
-  src: url('IkiMono-CondensedRegular.otf') format('opentype');
+  src: url('font-condensed-mono.otf') format('opentype');
   font-weight: normal;
   font-style: normal;
   font-display: swap;
