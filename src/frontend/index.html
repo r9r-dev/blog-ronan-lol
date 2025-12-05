@@ -3,24 +3,19 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Blue Archer</title>
-    <meta name="description" content="Un blog moderne et élégant à thème sombre avec défilement infini">
-    
+    <title>ronan.lol</title>
+    <meta name="description" content="A retro terminal-style blog with a minimalist aesthetic">
+
     <!-- Preload critical resources -->
     <link rel="preload" href="styles.css" as="style">
     <link rel="preload" href="app.js" as="script">
-    
-    <!-- Cyberpunk Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&family=Montserrat:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
-    
+
     <!-- Styles -->
-    <link rel="stylesheet" href="styles.css?v=1.0.4">
-    <link rel="stylesheet" href="highlight-purple-rose.css?v=1.0.4">
-    
+    <link rel="stylesheet" href="styles.css?v=2.0.0">
+    <link rel="stylesheet" href="highlight-purple-rose.css?v=2.0.0">
+
     <!-- Favicon -->
-    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📝</text></svg>">
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>💻</text></svg>">
 </head>
 <body>
     <div class="app">
@@ -33,12 +28,12 @@
                 <nav class="nav">
                     <div class="nav-controls">
                         <div class="search-container">
-                            <input type="text" 
-                                   id="search-input" 
-                                   class="search-input" 
-                                   placeholder="Rechercher..." 
+                            <span class="search-icon">&gt;</span>
+                            <input type="text"
+                                   id="search-input"
+                                   class="search-input"
+                                   placeholder="search..."
                                    autocomplete="off">
-                            <div class="search-icon">🔍</div>
                             <button class="search-clear" id="search-clear" style="display: none;">×</button>
                         </div>
                     </div>
@@ -63,7 +58,7 @@
                 <!-- Loading Indicator -->
                 <div class="loading-indicator" id="loading-indicator">
                     <div class="loading-spinner"></div>
-                    <p>Chargement d'autres articles...</p>
+                    <p>loading more posts...</p>
                 </div>
 
                 <!-- End of Posts Indicator -->
@@ -80,7 +75,7 @@
         <!-- Footer -->
         <footer class="footer">
             <div class="container">
-                <p>&copy; 2025 Cacao. <span id="version-info"></span></p>
+                <p>[ronan.lol] <span id="version-info"></span> // built with vanilla js</p>
             </div>
         </footer>
     </div>
@@ -88,16 +83,16 @@
     <!-- Error Modal -->
     <div class="modal" id="error-modal" style="display: none;">
         <div class="modal-content">
-            <span class="modal-close" id="modal-close">&times;</span>
-            <h3>Oups ! Une erreur s'est produite</h3>
+            <button class="modal-close" id="modal-close">&times;</button>
+            <h3>[ERROR]</h3>
             <p id="error-message"></p>
-            <button class="btn btn-primary" onclick="location.reload()">Recharger la page</button>
+            <button class="btn btn-primary" onclick="location.reload()">reload page</button>
         </div>
     </div>
 
     <!-- Loading Sentinel (for intersection observer) -->
     <div class="loading-sentinel" id="loading-sentinel"></div>
 
-    <script src="app.js?v=1.0.2"></script>
+    <script src="app.js?v=2.0.0"></script>
 </body>
 </html>

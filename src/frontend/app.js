@@ -14,8 +14,10 @@ class BlogApp {
     this.currentSearch = null; // Track current search query
     this.searchTimeout = null; // Debounce search requests
     this.allTags = []; // Store all available tags
+    this.isProcessingEmojis = false; // Prevent emoji observer loops
+    this.isProcessingCodeBlocks = false; // Prevent code block observer loops
     // Modern dark theme is default - no theme switching needed
-    
+
     this.init();
   }
 
@@ -25,6 +27,8 @@ class BlogApp {
     this.loadTags(); // Load available tags
     this.loadInitialPosts();
     this.loadVersionInfo(); // Load version info
+    this.setupCodeCopyButtons(); // Setup copy buttons for code blocks
+    this.convertEmojis(); // Convert emojis to Unicode and grayscale
   }
 
   // Event Listeners
@@ -328,8 +332,12 @@ class BlogApp {
     });
 
     container.appendChild(article);
+
+    // Process emojis in the newly added content
+    this.processEmojisInElement(article);
+
     this.scrollToTop();
-    
+
     // Update URL without page reload
     window.history.pushState({ postId: post.id }, post.title, `#post-${post.id}`);
   }
@@ -699,6 +707,241 @@ class BlogApp {
     const end = performance.now();
     console.log(`${name}: ${end - start} milliseconds`);
     return result;
+  }
+
+  // Code Copy Buttons
+  setupCodeCopyButtons() {
+    // Initial processing
+    this.addCopyButtonsToCodeBlocks();
+
+    // Setup observer with loop prevention
+    const observer = new MutationObserver((mutations) => {
+      if (this.isProcessingCodeBlocks) return;
+
+      this.isProcessingCodeBlocks = true;
+      setTimeout(() => {
+        this.addCopyButtonsToCodeBlocks();
+        this.isProcessingCodeBlocks = false;
+      }, 100);
+    });
+
+    observer.observe(document.body, {
+      childList: true,
+      subtree: true
+    });
+  }
+
+  addCopyButtonsToCodeBlocks() {
+    const codeBlocks = document.querySelectorAll('pre code:not(.copy-button-added)');
+
+    codeBlocks.forEach(codeBlock => {
+      const pre = codeBlock.parentElement;
+
+      if (pre.querySelector('.code-copy-button')) {
+        return;
+      }
+
+      if (!pre.parentElement.classList.contains('code-block-wrapper')) {
+        const wrapper = document.createElement('div');
+        wrapper.className = 'code-block-wrapper';
+        pre.parentNode.insertBefore(wrapper, pre);
+        wrapper.appendChild(pre);
+      }
+
+      const copyButton = document.createElement('button');
+      copyButton.className = 'code-copy-button';
+      copyButton.textContent = 'copy';
+      copyButton.setAttribute('aria-label', 'Copy code to clipboard');
+
+      copyButton.addEventListener('click', async () => {
+        const code = codeBlock.textContent;
+
+        try {
+          await navigator.clipboard.writeText(code);
+          copyButton.classList.add('copied');
+          copyButton.textContent = 'copied';
+
+          setTimeout(() => {
+            copyButton.classList.remove('copied');
+            copyButton.textContent = 'copy';
+          }, 2000);
+        } catch (err) {
+          console.error('Failed to copy code:', err);
+          copyButton.textContent = 'error';
+
+          setTimeout(() => {
+            copyButton.textContent = 'copy';
+          }, 2000);
+        }
+      });
+
+      pre.parentElement.appendChild(copyButton);
+      codeBlock.classList.add('copy-button-added');
+    });
+  }
+
+  // Emoji Converter
+  getEmojiMap() {
+    return {
+      // Checkmarks and crosses
+      '✅': '✓', '☑️': '✓', '☑': '✓', '✔️': '✓', '✔': '✓',
+      '❌': '⨯', '✖️': '⨯', '✖': '⨯', '❎': '⨯',
+
+      // Math symbols
+      '➕': '+', '➖': '−',
+
+      // Arrows (only actual arrow emojis, not metaphors)
+      '⬆️': '↑', '⬇️': '↓', '➡️': '→', '⬅️': '←',
+      '↗️': '↗', '↘️': '↘', '↙️': '↙', '↖️': '↖',
+
+      // Warning/Alert symbols (already monochrome)
+      '⚠️': '⚠', '⚠': '⚠',
+
+      // Geometric shapes - standard (non-colored versions)
+      '⭕': '○', '⚫': '●', '⚪': '○',
+      '⬛': '■', '⬜': '□',
+      '▪️': '▪', '▫️': '▫', '◾': '▪', '◽': '▫',
+      '◼️': '■', '◻️': '□',
+      '🔺': '▲', '🔻': '▼',
+
+      // Heart (only red heart, the standard one)
+      '❤️': '♥', '❤': '♥'
+    };
+  }
+
+  // Process emojis in a specific element (can be called manually)
+  processEmojisInElement(element) {
+    const emojiMap = this.getEmojiMap();
+
+    const processTextNode = (node) => {
+      if (node.nodeType === Node.TEXT_NODE) {
+        let text = node.textContent;
+        let modified = false;
+
+        for (const [emoji, unicode] of Object.entries(emojiMap)) {
+          if (text.includes(emoji)) {
+            text = text.replaceAll(emoji, unicode);
+            modified = true;
+          }
+        }
+
+        if (modified) {
+          node.textContent = text;
+        }
+      }
+    };
+
+    const walkTextNodes = (el) => {
+      if (!el || !el.tagName) return;
+      if (el.tagName === 'CODE' || el.tagName === 'PRE') {
+        return;
+      }
+
+      const walker = document.createTreeWalker(
+        el,
+        NodeFilter.SHOW_TEXT,
+        null,
+        false
+      );
+
+      const nodes = [];
+      let node;
+      while (node = walker.nextNode()) {
+        nodes.push(node);
+      }
+
+      nodes.forEach(processTextNode);
+    };
+
+    walkTextNodes(element);
+    this.applyGrayscaleToEmojis(element);
+  }
+
+  convertEmojis() {
+    // Initial conversion
+    this.processEmojisInElement(document.body);
+
+    // Setup observer with loop prevention
+    const observer = new MutationObserver((mutations) => {
+      if (this.isProcessingEmojis) return;
+
+      this.isProcessingEmojis = true;
+      setTimeout(() => {
+        mutations.forEach((mutation) => {
+          mutation.addedNodes.forEach((node) => {
+            if (node.nodeType === Node.ELEMENT_NODE) {
+              this.processEmojisInElement(node);
+            }
+          });
+        });
+        this.isProcessingEmojis = false;
+      }, 100);
+    });
+
+    observer.observe(document.body, {
+      childList: true,
+      subtree: true
+    });
+  }
+
+  applyGrayscaleToEmojis(rootElement = document.body) {
+    if (!rootElement) return;
+
+    const emojiRegex = /[\u{1F300}-\u{1F9FF}\u{2600}-\u{26FF}\u{2700}-\u{27BF}\u{1F000}-\u{1F02F}\u{1F0A0}-\u{1F0FF}\u{1F100}-\u{1F64F}\u{1F680}-\u{1F6FF}\u{1F900}-\u{1F9FF}\u{1FA00}-\u{1FA6F}\u{1FA70}-\u{1FAFF}]/gu;
+
+    const walkForGrayscale = (element) => {
+      if (!element || !element.tagName) return;
+      if (element.tagName === 'CODE' || element.tagName === 'PRE') {
+        return;
+      }
+
+      const walker = document.createTreeWalker(
+        element,
+        NodeFilter.SHOW_TEXT,
+        null,
+        false
+      );
+
+      const nodes = [];
+      let node;
+      while (node = walker.nextNode()) {
+        // Skip if already processed
+        if (node.parentNode && node.parentNode.classList && node.parentNode.classList.contains('emoji-grayscale')) {
+          continue;
+        }
+        nodes.push(node);
+      }
+
+      nodes.forEach((textNode) => {
+        const text = textNode.textContent;
+        const matches = text.match(emojiRegex);
+
+        if (matches && matches.length > 0) {
+          const parts = text.split(emojiRegex);
+          const fragment = document.createDocumentFragment();
+
+          let matchIndex = 0;
+          parts.forEach((part) => {
+            if (part) {
+              fragment.appendChild(document.createTextNode(part));
+            }
+            if (matchIndex < matches.length) {
+              const span = document.createElement('span');
+              span.className = 'emoji-grayscale';
+              span.textContent = matches[matchIndex];
+              fragment.appendChild(span);
+              matchIndex++;
+            }
+          });
+
+          if (textNode.parentNode) {
+            textNode.parentNode.replaceChild(fragment, textNode);
+          }
+        }
+      });
+    };
+
+    walkForGrayscale(rootElement);
   }
 }
 

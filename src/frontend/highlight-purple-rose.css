@@ -1,187 +1,192 @@
 /*
-  Purple Rose Dark Theme for Highlight.js
-  A beautiful dark theme with purple and rose accent colors
-  Designed to complement modern dark UIs
+  Monochrome Terminal Theme for Highlight.js
+  Pure grayscale with bold/italic variations
+  Designed for minimalist terminal aesthetics
 */
 
 .hljs {
-  color: #e6e6fa; /* Light lavender for base text */
-  background: #1a1625; /* Deep purple-black background */
-  border-radius: 8px;
-  padding: 1.5rem;
-  font-family: 'JetBrains Mono', 'Fira Code', 'Monaco', 'Consolas', monospace;
+  color: #e8e8e8; /* Light gray for base text */
+  background: #1a1a1a; /* Dark background */
+  border-radius: 0;
+  padding: 1rem;
+  font-family: 'Courier New', 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', monospace;
   font-size: 0.9rem;
-  line-height: 1.6;
+  line-height: 1.5;
   overflow-x: auto;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-  border: 1px solid rgba(147, 51, 234, 0.2); /* Subtle purple border */
+  border: 1px solid #303030;
 }
 
 .hljs-subst {
-  color: #e6e6fa;
+  color: #e8e8e8;
 }
 
-/* Keywords - Purple tones */
+/* Keywords - Bold white */
 .hljs-keyword,
 .hljs-selector-tag,
 .hljs-literal,
 .hljs-title.function_,
 .hljs-built_in {
-  color: #c084fc; /* Light purple */
-  font-weight: 600;
+  color: #ffffff;
+  font-weight: bold;
 }
 
-/* Types, classes - Rose/Pink tones */
+/* Types, classes - Bold light gray */
 .hljs-type,
 .hljs-class .hljs-title,
 .hljs-title.class_ {
-  color: #f472b6; /* Rose pink */
-  font-weight: 600;
+  color: #d0d0d0;
+  font-weight: bold;
 }
 
-/* Strings - Soft rose */
+/* Strings - Italic light gray */
 .hljs-string,
 .hljs-char,
 .hljs-template-variable,
 .hljs-template-tag {
-  color: #fb7185; /* Soft rose */
+  color: #d0d0d0;
+  font-style: italic;
 }
 
-/* Numbers - Light purple */
+/* Numbers - Light gray */
 .hljs-number,
 .hljs-literal {
-  color: #ddd6fe; /* Very light purple */
+  color: #c8c8c8;
 }
 
-/* Comments - Muted purple */
+/* Comments - Italic muted gray */
 .hljs-comment,
 .hljs-quote {
-  color: #a78bfa; /* Muted purple */
+  color: #999999;
   font-style: italic;
-  opacity: 0.8;
 }
 
-/* Variables - Light lavender */
+/* Variables - Regular light gray */
 .hljs-variable,
 .hljs-name,
 .hljs-attr {
-  color: #e879f9; /* Bright magenta */
+  color: #c8c8c8;
 }
 
-/* Functions - Bright purple */
+/* Functions - Bold light gray */
 .hljs-function .hljs-title,
 .hljs-title.function {
-  color: #c084fc; /* Light purple */
-  font-weight: 600;
+  color: #e8e8e8;
+  font-weight: bold;
 }
 
-/* Tags (HTML) - Rose */
+/* Tags (HTML) - Bold */
 .hljs-tag,
 .hljs-tag .hljs-name {
-  color: #f43f5e; /* Bright rose */
+  color: #e0e0e0;
+  font-weight: bold;
 }
 
-/* Attributes - Soft purple */
+/* Attributes - Light gray */
 .hljs-attribute {
-  color: #d8b4fe; /* Soft purple */
+  color: #cccccc;
 }
 
-/* Operators, punctuation - Light gray with purple tint */
+/* Operators, punctuation - Medium gray */
 .hljs-operator,
 .hljs-punctuation {
-  color: #d1d5db;
+  color: #b0b0b0;
 }
 
-/* Meta, preprocessor - Muted rose */
+/* Meta, preprocessor - Italic */
 .hljs-meta,
 .hljs-meta .hljs-keyword {
-  color: #fda4af; /* Light rose */
+  color: #bcbcbc;
+  font-style: italic;
 }
 
-/* Doctags, annotations - Bright magenta */
+/* Doctags, annotations - Italic light gray */
 .hljs-doctag,
 .hljs-annotation {
-  color: #e879f9;
+  color: #c0c0c0;
+  font-style: italic;
 }
 
-/* Symbols, constants - Bright purple */
+/* Symbols, constants - White */
 .hljs-symbol,
 .hljs-bullet,
 .hljs-code {
-  color: #a855f7; /* Medium purple */
+  color: #e8e8e8;
 }
 
-/* Links - Cyan-purple */
+/* Links - Underlined */
 .hljs-link {
-  color: #8b5cf6;
+  color: #c0c0c0;
   text-decoration: underline;
 }
 
-/* Regex - Rose gold */
+/* Regex - Bold italic */
 .hljs-regexp {
-  color: #f59e0b;
+  color: #b8b8b8;
+  font-weight: bold;
+  font-style: italic;
 }
 
-/* Section, selector-id - Bright rose */
+/* Section, selector-id - Bold white */
 .hljs-section,
 .hljs-selector-id {
-  color: #ec4899;
-  font-weight: 600;
+  color: #ffffff;
+  font-weight: bold;
 }
 
-/* Additions (diff) - Soft green with purple tint */
+/* Additions (diff) - Light gray background */
 .hljs-addition {
-  background-color: rgba(16, 185, 129, 0.2);
-  color: #10b981;
+  background-color: rgba(255, 255, 255, 0.1);
+  color: #c8c8c8;
 }
 
-/* Deletions (diff) - Soft red with rose tint */
+/* Deletions (diff) - Dark gray background */
 .hljs-deletion {
-  background-color: rgba(239, 68, 68, 0.2);
-  color: #ef4444;
+  background-color: rgba(0, 0, 0, 0.2);
+  color: #808080;
+  text-decoration: line-through;
 }
 
-/* Emphasis - Italic with rose color */
+/* Emphasis - Italic */
 .hljs-emphasis {
   font-style: italic;
-  color: #fb7185;
+  color: #b8b8b8;
 }
 
-/* Strong - Bold with purple color */
+/* Strong - Bold */
 .hljs-strong {
-  font-weight: 700;
-  color: #c084fc;
+  font-weight: bold;
+  color: #e8e8e8;
 }
 
 /* Special highlighting for important keywords */
 .hljs-keyword.hljs-important,
 .hljs-selector-tag.hljs-important {
-  color: #f43f5e;
-  font-weight: 700;
+  color: #ffffff;
+  font-weight: bold;
 }
 
 /* Scrollbar styling for code blocks */
 .hljs::-webkit-scrollbar {
-  height: 8px;
+  height: 6px;
 }
 
 .hljs::-webkit-scrollbar-track {
-  background: rgba(147, 51, 234, 0.1);
+  background: #0a0a0a;
 }
 
 .hljs::-webkit-scrollbar-thumb {
-  background: linear-gradient(90deg, #c084fc, #f472b6);
-  border-radius: 4px;
+  background: #404040;
+  border-radius: 0;
 }
 
 .hljs::-webkit-scrollbar-thumb:hover {
-  background: linear-gradient(90deg, #a855f7, #ec4899);
+  background: #505050;
 }
 
 /* Line numbers (if used) */
 .hljs-ln-numbers {
-  color: #6b7280;
-  border-right: 1px solid rgba(147, 51, 234, 0.2);
+  color: #505050;
+  border-right: 1px solid #303030;
   padding-right: 0.5rem;
   margin-right: 0.5rem;
   user-select: none;
@@ -189,17 +194,58 @@
 
 /* Selection highlighting */
 .hljs::selection {
-  background-color: rgba(196, 132, 252, 0.3);
+  background-color: rgba(255, 255, 255, 0.2);
 }
 
 .hljs::-moz-selection {
-  background-color: rgba(196, 132, 252, 0.3);
+  background-color: rgba(255, 255, 255, 0.2);
 }
 
 /* Code block container enhancement */
 .hljs-container {
   position: relative;
-  margin: 1.5rem 0;
+  margin: 1rem 0;
+}
+
+/* Copy button styling */
+.code-block-wrapper {
+  position: relative;
+  margin: 1rem 0;
+}
+
+.code-copy-button {
+  position: absolute;
+  top: 0.5rem;
+  right: 0.5rem;
+  background: #303030;
+  color: #e8e8e8;
+  border: 1px solid #404040;
+  padding: 0.375rem 0.75rem;
+  font-family: 'Courier New', 'SF Mono', Monaco, monospace;
+  font-size: 0.75rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.1s ease;
+  text-transform: uppercase;
+  z-index: 10;
+}
+
+.code-copy-button:hover {
+  background: #404040;
+  transform: translateY(-2px);
+}
+
+.code-copy-button:active {
+  transform: translateY(0);
+}
+
+.code-copy-button.copied {
+  background: #505050;
+  color: #ffffff;
+}
+
+.code-copy-button.copied::after {
+  content: ' ✓';
 }
 
 /* Language badge (if implemented) */
@@ -207,31 +253,32 @@
   position: absolute;
   top: 0.5rem;
   right: 0.5rem;
-  background: linear-gradient(135deg, #c084fc, #f472b6);
-  color: white;
+  background: #303030;
+  color: #e8e8e8;
   padding: 0.25rem 0.5rem;
-  border-radius: 4px;
+  border-radius: 0;
   font-size: 0.75rem;
-  font-weight: 500;
+  font-weight: bold;
   text-transform: uppercase;
   letter-spacing: 0.5px;
+  border: 1px solid #404040;
 }
 
 /* Inline code styling */
 .hljs-inline {
-  background: rgba(147, 51, 234, 0.15);
-  color: #e879f9;
+  background: #1a1a1a;
+  color: #c0c0c0;
   padding: 0.125rem 0.375rem;
-  border-radius: 4px;
+  border-radius: 0;
   font-size: 0.875em;
-  border: 1px solid rgba(147, 51, 234, 0.2);
+  border: 1px solid #303030;
 }
 
 /* Responsive adjustments */
 @media (max-width: 768px) {
   .hljs {
     font-size: 0.8rem;
-    padding: 1rem;
-    border-radius: 6px;
+    padding: 0.75rem;
+    border-radius: 0;
   }
 }
