@@ -7,6 +7,57 @@
  * adapted with a personal accent and rebuilt from scratch in this stylesheet.
  */
 
+/* ─── self-hosted fonts (Canela Deck + Text from macOS catalog) ─── */
+@font-face {
+  font-family: 'Canela Deck';
+  src: url('/fonts/CanelaDeck-Regular.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Canela Deck';
+  src: url('/fonts/CanelaDeck-Medium.woff2') format('woff2');
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Canela Deck';
+  src: url('/fonts/CanelaDeck-Bold.woff2') format('woff2');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Canela Text';
+  src: url('/fonts/CanelaText-Regular.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Canela Text';
+  src: url('/fonts/CanelaText-Italic.woff2') format('woff2');
+  font-weight: 400;
+  font-style: italic;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Canela Text';
+  src: url('/fonts/CanelaText-Medium.woff2') format('woff2');
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Canela Text';
+  src: url('/fonts/CanelaText-Bold.woff2') format('woff2');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
 /* ───────── tokens ───────── */
 :root {
   /* surfaces */
