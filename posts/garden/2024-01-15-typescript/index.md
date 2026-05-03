@@ -4,6 +4,7 @@ author: "Ronan"
 date: "2024-01-15"
 tags: ["TypeScript", "JavaScript", "Développement Web", "Tutorial"]
 excerpt: "Découvrez comment TypeScript peut transformer votre expérience de développement JavaScript avec ce guide complet pour débutants."
+growthStage: evergreen
 ---
 
 # Premiers pas avec TypeScript : Guide complet pour débutants

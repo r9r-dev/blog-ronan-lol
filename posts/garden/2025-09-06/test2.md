@@ -4,6 +4,7 @@ author: Test Author
 date: 2025-09-06
 tags: test, cyberpunk
 excerpt: Ceci est un article de test pour vérifier que les posts dans les dossiers fonctionnent
+growthStage: evergreen
 ---
 
 # Test Article 2

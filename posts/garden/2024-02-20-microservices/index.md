@@ -4,6 +4,7 @@ author: "Ronan"
 date: "2024-02-20"
 tags: ["Architecture", "Microservices", "DevOps", "Cloud"]
 excerpt: "Explorez l'architecture microservices, ses avantages, ses défis et les meilleures pratiques pour une implémentation réussie."
+growthStage: evergreen
 ---
 
 # Architecture Microservices : Avantages, Défis et Bonnes Pratiques
