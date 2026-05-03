@@ -1,0 +1,37 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import ArticleItem from '../../components/ArticleItem.astro';
+
+const posts = await getCollection('articles', ({ data }) => !data.draft);
+posts.sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
+
+const total = posts.length;
+const allTopics = Array.from(new Set(posts.flatMap((post) => post.data.tags ?? []))).slice(0, 8);
+---
+
+<BaseLayout title="Articles — ronan.lol" description="Pièces finies. Long-form, plus posées.">
+  <header class="page-header">
+    <p class="page-eyebrow eyebrow-articles">❦ Articles <span class="page-count">· {total}</span></p>
+    <h1 class="page-title">Articles</h1>
+    <p class="page-dek">
+      Pièces finies. Long-form, plus posées, publiées dans leur état définitif. Pas d'arrosage, pas d'évolution — la pensée à un moment donné.
+    </p>
+  </header>
+
+  <div class="filters">
+    <div class="filter-group">
+      <span class="filter-label">Sujets</span>
+      <div class="filter-list">
+        <a href="/articles" class="filter-link active">Tout</a>
+        {allTopics.map((t) => (
+          <a href={`/tags/${encodeURIComponent(t.toLowerCase())}`} class="filter-link">{t}</a>
+        ))}
+      </div>
+    </div>
+  </div>
+
+  <section class="articles-list">
+    {posts.map((post) => <ArticleItem post={post} />)}
+  </section>
+</BaseLayout>

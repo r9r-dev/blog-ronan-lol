@@ -1,0 +1,56 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import GardenCard from '../../components/GardenCard.astro';
+
+const posts = (await getCollection('garden', ({ data }) => !data.draft))
+  .sort((a, b) => {
+    const aT = (a.data.lastTended ?? a.data.date).getTime();
+    const bT = (b.data.lastTended ?? b.data.date).getTime();
+    return bT - aT;
+  });
+
+const total = posts.length;
+
+const allTopics = Array.from(new Set(posts.flatMap((p) => p.data.tags ?? []))).slice(0, 8);
+const stages: Array<['seedling' | 'budding' | 'evergreen', string, string]> = [
+  ['evergreen', '🌲 Evergreen', 'stage-evergreen'],
+  ['budding', '🌿 Budding', 'stage-budding'],
+  ['seedling', '🌱 Seedling', 'stage-seedling'],
+];
+---
+
+<BaseLayout title="Jardin Numérique — ronan.lol" description="Notes vivantes, en cours d'arrosage.">
+  <header class="page-header">
+    <p class="page-eyebrow eyebrow-garden">🌿 Jardin Numérique <span class="page-count">· {total}</span></p>
+    <h1 class="page-title">Le Jardin</h1>
+    <p class="page-dek">
+      Une collection de notes, d'essais et d'idées à moitié cuites que j'arrose plus ou moins régulièrement. Certaines deviennent des arbres. D'autres meurent. Toutes évoluent.
+    </p>
+  </header>
+
+  <div class="filters">
+    <div class="filter-group">
+      <span class="filter-label">Sujets</span>
+      <div class="filter-list">
+        <a href="/jardin" class="filter-link active">Tout</a>
+        {allTopics.map((t) => (
+          <a href={`/tags/${encodeURIComponent(t.toLowerCase())}`} class="filter-link">{t}</a>
+        ))}
+      </div>
+    </div>
+    <div class="filter-group">
+      <span class="filter-label">Étape</span>
+      <div class="filter-list">
+        <a href="/jardin" class="filter-link active">Tout</a>
+        {stages.map(([s, label, cls]) => (
+          <a href={`/jardin?stage=${s}`} class={`filter-link ${cls}`}>{label}</a>
+        ))}
+      </div>
+    </div>
+  </div>
+
+  <section class="garden-grid">
+    {posts.map((post) => <GardenCard post={post} />)}
+  </section>
+</BaseLayout>
