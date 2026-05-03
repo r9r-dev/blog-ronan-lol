@@ -1,0 +1,16 @@
+---
+interface Note { num: number; html: string; }
+interface Props { notes: Note[]; }
+const { notes } = Astro.props;
+---
+
+{notes.length > 0 && (
+  <aside class="notes-rail">
+    <p class="notes-title">Notes & sources</p>
+    {notes.map((note) => (
+      <div class="note" id={`sidenote-${note.num}`}>
+        <p><span class="num">{note.num}</span><Fragment set:html={note.html} /></p>
+      </div>
+    ))}
+  </aside>
+)}

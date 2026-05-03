@@ -1,26 +1,16 @@
 ---
 import Brand from './Brand.astro';
+const { pathname } = Astro.url;
+const is = (prefix: string) => pathname.startsWith(prefix);
 ---
 
 <header class="navbar">
   <div class="navbar-inner">
     <Brand />
-    <nav class="navbar-nav" aria-label="Navigation">
-      <a class="nav-link" href="/tags">Tags</a>
-      <a class="nav-link" href="/search">Rechercher</a>
+    <nav class="nav-links" aria-label="Navigation principale">
+      <a href="/jardin" class:list={['nav-link', { active: is('/jardin') }]}>Jardin</a>
+      <a href="/articles" class:list={['nav-link', { active: is('/articles') }]}>Articles</a>
+      <a href="/search" class:list={['nav-link', { active: is('/search') }]}>Recherche</a>
     </nav>
   </div>
 </header>
-
-<style>
-  .nav-link {
-    font-family: var(--font-display);
-    font-style: italic;
-    font-size: var(--t-base);
-    color: var(--color-text-soft);
-    text-decoration: none;
-    margin-left: var(--s-5);
-    transition: color var(--t-fast) var(--ease);
-  }
-  .nav-link:hover { color: var(--color-link); }
-</style>

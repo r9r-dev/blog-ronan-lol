@@ -1,0 +1,6 @@
+---
+interface Props { num: number; }
+const { num } = Astro.props;
+---
+
+<a class="sidenote-ref" href={`#sidenote-${num}`} aria-describedby={`sidenote-${num}`}>{num}</a>
