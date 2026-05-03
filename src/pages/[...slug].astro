@@ -1,0 +1,31 @@
+---
+import { getCollection, render } from 'astro:content';
+import PostLayout from '../layouts/PostLayout.astro';
+import { readTimeMinutes } from '../utils/relativeDate';
+import type { CollectionEntry } from 'astro:content';
+
+export async function getStaticPaths() {
+  const posts = await getCollection('posts', ({ data }) => !data.draft);
+  return posts.map((post) => {
+    const slug = post.id.replace(/\/index$/, '');
+    return {
+      params: { slug },
+      props: { post },
+    };
+  });
+}
+
+interface Props {
+  post: CollectionEntry<'posts'>;
+}
+
+const { post } = Astro.props;
+const { Content, headings, remarkPluginFrontmatter } = await render(post);
+
+const bodyText = post.body ?? '';
+const readTime = readTimeMinutes(bodyText);
+---
+
+<PostLayout post={post} headings={headings} readTime={readTime}>
+  <Content />
+</PostLayout>

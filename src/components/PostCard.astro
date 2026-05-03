@@ -1,0 +1,54 @@
+---
+import { formatRelativeDate, formatAbsoluteDate } from '../utils/relativeDate';
+import { getCover } from '../utils/cover';
+import type { CollectionEntry } from 'astro:content';
+
+interface Props {
+  post: CollectionEntry<'posts'>;
+  featured?: boolean;
+}
+
+const { post, featured = false } = Astro.props;
+const { data, id } = post;
+const cover = getCover(id, data.title);
+const relDate = formatRelativeDate(data.date);
+const absDate = formatAbsoluteDate(data.date);
+const slug = id.replace(/\/index$/, '');
+
+const styleVar = `--cover-color: ${cover.color}; --cover-monogram: '${cover.monogram}';`;
+---
+
+<article
+  class={`post-card${featured ? ' featured' : ''}`}
+  data-post-id={slug}
+  style={styleVar}
+>
+  <header class="post-header">
+    <p class="post-eyebrow">
+      <span class="post-eyebrow-type">{data.type ?? 'Note'}</span>
+      <span class="post-eyebrow-leaf" aria-hidden="true">❦</span>
+      <span class="post-eyebrow-date" title={absDate}>Planté {relDate}</span>
+    </p>
+    <h2 class="post-title">
+      <a href={`/${slug}`}>{data.title}</a>
+    </h2>
+    <div class="post-meta">
+      <span class="post-author">{data.author}</span>
+    </div>
+    {data.tags && data.tags.length > 0 && (
+      <div class="post-tags">
+        {data.tags.map((tag) => (
+          <a class="post-tag" href={`/tags/${encodeURIComponent(tag.toLowerCase())}`}>{tag}</a>
+        ))}
+      </div>
+    )}
+  </header>
+  {data.excerpt && (
+    <div class="post-excerpt">
+      <p>{data.excerpt}</p>
+    </div>
+  )}
+  <a href={`/${slug}`} class="read-more">
+    Lire <span aria-hidden="true">→</span>
+  </a>
+</article>

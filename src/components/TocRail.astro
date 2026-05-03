@@ -1,0 +1,59 @@
+---
+import type { MarkdownHeading } from 'astro';
+
+interface Props {
+  headings: MarkdownHeading[];
+}
+
+const { headings } = Astro.props;
+const filtered = headings.filter((h) => h.depth === 2 || h.depth === 3);
+---
+
+{filtered.length > 0 && (
+  <nav class="toc-rail" aria-label="Sommaire">
+    <p class="toc-title">Sommaire</p>
+    <ol class="toc-list">
+      {filtered.map((h) => (
+        <li class={`depth-${h.depth}`}>
+          <a href={`#${h.slug}`} data-toc-target={h.slug}>{h.text}</a>
+        </li>
+      ))}
+    </ol>
+  </nav>
+)}
+
+<script>
+  // Scrollspy: highlight the closest visible heading in the TOC.
+  function setupScrollspy() {
+    const rail = document.querySelector<HTMLElement>('.toc-rail');
+    if (!rail) return;
+    const links = rail.querySelectorAll<HTMLAnchorElement>('a[data-toc-target]');
+    if (links.length === 0) return;
+
+    const targetIds = Array.from(links).map((a) => a.dataset.tocTarget!);
+    const headings = targetIds
+      .map((id) => document.getElementById(id))
+      .filter((el): el is HTMLElement => el !== null);
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          const link = rail.querySelector<HTMLAnchorElement>(
+            `a[data-toc-target="${entry.target.id}"]`,
+          );
+          if (!link) return;
+          if (entry.isIntersecting) {
+            rail.querySelectorAll('a.active').forEach((a) => a.classList.remove('active'));
+            link.classList.add('active');
+          }
+        });
+      },
+      { rootMargin: '-20% 0px -70% 0px', threshold: 0 },
+    );
+
+    headings.forEach((h) => observer.observe(h));
+  }
+
+  setupScrollspy();
+  document.addEventListener('astro:page-load', setupScrollspy);
+</script>

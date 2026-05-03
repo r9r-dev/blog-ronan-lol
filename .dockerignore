@@ -1,0 +1,13 @@
+node_modules
+dist
+.astro
+.cache
+.DS_Store
+._*
+*.log
+.git
+.github
+.claude
+.playwright
+.playwright-cli
+.vscode

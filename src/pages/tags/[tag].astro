@@ -1,0 +1,59 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PostCard from '../../components/PostCard.astro';
+
+export async function getStaticPaths() {
+  const posts = await getCollection('posts', ({ data }) => !data.draft);
+  const tagSet = new Map<string, string>();
+  for (const post of posts) {
+    for (const tag of post.data.tags ?? []) {
+      tagSet.set(tag.toLowerCase(), tag);
+    }
+  }
+
+  return [...tagSet.entries()].map(([slug, label]) => {
+    const filtered = posts
+      .filter((p) => (p.data.tags ?? []).some((t) => t.toLowerCase() === slug))
+      .sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
+    return {
+      params: { tag: slug },
+      props: { tag: label, posts: filtered },
+    };
+  });
+}
+
+const { tag, posts } = Astro.props;
+---
+
+<BaseLayout title={`${tag} · ronan.lol`} description={`Articles tagués ${tag}.`}>
+  <header class="page-header">
+    <p class="page-eyebrow">
+      <a class="page-eyebrow-back" href="/tags">← Tous les tags</a>
+    </p>
+    <h1 class="page-title">{tag}</h1>
+    <p class="page-dek">
+      {posts.length} {posts.length === 1 ? 'article étiqueté' : 'articles étiquetés'} {tag}.
+    </p>
+    <hr class="page-rule" />
+  </header>
+
+  <section class="blog-posts" aria-label="Articles">
+    <div class="posts-grid">
+      {posts.map((post) => <PostCard post={post} />)}
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .page-eyebrow-back {
+    color: var(--color-eyebrow);
+    text-decoration: none;
+    font-family: var(--font-sans);
+    font-size: var(--t-xs);
+    font-weight: 700;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+  }
+  .page-eyebrow-back:hover { color: var(--color-link-hover); }
+</style>

@@ -1,0 +1,33 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
+
+<BaseLayout title="Introuvable · ronan.lol" description="Cette page n'existe pas, ou plus.">
+  <header class="page-header">
+    <p class="page-eyebrow">
+      <span class="page-count">404</span>
+      <span class="page-eyebrow-label">Introuvable</span>
+    </p>
+    <h1 class="page-title">Cette page n'existe pas, ou plus.</h1>
+    <p class="page-dek">
+      Peut-être un lien périmé. Peut-être un écrit retiré. Aucun jugement.
+    </p>
+    <hr class="page-rule" />
+  </header>
+
+  <p class="not-found-actions">
+    <a class="back-button" href="/">Retour au carnet</a>
+    <a class="back-button" href="/tags">Voir les tags</a>
+    <a class="back-button" href="/search">Chercher autre chose</a>
+  </p>
+</BaseLayout>
+
+<style>
+  .not-found-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--s-5);
+    margin-top: var(--s-5);
+  }
+  .not-found-actions .back-button { margin: 0; }
+</style>

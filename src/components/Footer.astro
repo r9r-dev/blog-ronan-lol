@@ -1,0 +1,27 @@
+---
+const year = new Date().getFullYear();
+---
+
+<footer class="site-footer">
+  <div class="site-footer-inner">
+    <div class="site-footer-block site-footer-block--main">
+      <p class="site-footer-headline">Suivre les écrits&nbsp;?</p>
+      <a class="site-footer-rss" href="/rss.xml" rel="alternate" type="application/rss+xml">
+        <span class="site-footer-rss-icon" aria-hidden="true">≡</span>
+        RSS
+      </a>
+      <p class="site-footer-copyright">© {year} Ronan Lamour</p>
+    </div>
+    <div class="site-footer-block site-footer-block--nav">
+      <ul class="site-footer-list">
+        <li><a href="/">Le carnet</a></li>
+        <li><a href="/tags">Tags</a></li>
+        <li><a href="/search">Recherche</a></li>
+      </ul>
+      <ul class="site-footer-list site-footer-list--meta">
+        <li><a href="/rss.xml">RSS</a></li>
+        <li><a href="/sitemap-index.xml">Sitemap</a></li>
+      </ul>
+    </div>
+  </div>
+</footer>

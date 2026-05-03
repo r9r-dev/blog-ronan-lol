@@ -1,0 +1,28 @@
+---
+interface Props {
+  ariaLabel?: string;
+}
+const { ariaLabel = 'Accueil ronan.lol' } = Astro.props;
+---
+
+<a href="/" class="brand" aria-label={ariaLabel}>
+  <svg class="brand-mark" viewBox="0 0 96 56" aria-hidden="true" focusable="false">
+    <g class="sprig sprig-left" stroke="currentColor" stroke-width="1.6" fill="none" stroke-linecap="round">
+      <path d="M4 28 q 8 -10 18 -2"></path>
+      <path d="M4 28 q 8 10 18 2"></path>
+      <path d="M10 18 q 4 -4 10 0"></path>
+      <path d="M10 38 q 4 4 10 0"></path>
+      <path d="M14 24 l 6 -2"></path>
+      <path d="M14 32 l 6 2"></path>
+    </g>
+    <text class="brand-letter" x="48" y="40" font-family="Fraunces, Georgia, serif" font-style="italic" font-weight="500" font-size="38" text-anchor="middle">r</text>
+    <g class="sprig sprig-right" stroke="currentColor" stroke-width="1.6" fill="none" stroke-linecap="round">
+      <path d="M92 28 q -8 -10 -18 -2"></path>
+      <path d="M92 28 q -8 10 -18 2"></path>
+      <path d="M86 18 q -4 -4 -10 0"></path>
+      <path d="M86 38 q -4 4 -10 0"></path>
+      <path d="M82 24 l -6 -2"></path>
+      <path d="M82 32 l -6 2"></path>
+    </g>
+  </svg>
+</a>

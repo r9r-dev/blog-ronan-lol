@@ -1,0 +1,65 @@
+---
+import '../styles/global.css';
+import Navbar from '../components/Navbar.astro';
+import Footer from '../components/Footer.astro';
+import { ClientRouter } from 'astro:transitions';
+
+interface Props {
+  title: string;
+  description?: string;
+  ogImage?: string;
+}
+
+const { title, description = 'Carnet de Ronan Lamour. Notes techniques, lectures et expériences.', ogImage } = Astro.props;
+const canonical = new URL(Astro.url.pathname, Astro.site).toString();
+---
+
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="canonical" href={canonical} />
+    <meta name="description" content={description} />
+    <meta name="color-scheme" content="dark" />
+    <meta name="theme-color" content="#252420" />
+
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:type" content="website" />
+    {ogImage && <meta property="og:image" content={ogImage} />}
+
+    <title>{title}</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght,SOFT,WONK@0,9..144,300..900,30..100,0..1;1,9..144,300..900,30..100,0..1&family=Source+Serif+4:ital,opsz,wght@0,8..60,300..900;1,8..60,300..900&family=JetBrains+Mono:wght@400;500&display=swap"
+    />
+
+    <link
+      rel="icon"
+      type="image/svg+xml"
+      href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><rect width='64' height='64' rx='10' fill='%23252420'/><text x='32' y='44' font-family='Fraunces, Georgia, serif' font-style='italic' font-weight='500' font-size='38' text-anchor='middle' fill='%23ff7ac4'>r</text><path d='M10 32 q 6 -6 12 0' stroke='%232bc4da' stroke-width='1.5' fill='none' stroke-linecap='round'/><path d='M10 32 q 6 6 12 0' stroke='%232bc4da' stroke-width='1.5' fill='none' stroke-linecap='round'/><path d='M54 32 q -6 -6 -12 0' stroke='%232bc4da' stroke-width='1.5' fill='none' stroke-linecap='round'/><path d='M54 32 q -6 6 -12 0' stroke='%232bc4da' stroke-width='1.5' fill='none' stroke-linecap='round'/></svg>"
+    />
+
+    <link rel="alternate" type="application/rss+xml" title="ronan.lol" href="/rss.xml" />
+
+    <ClientRouter />
+  </head>
+  <body>
+    <a href="#main" class="skip-link">Aller au contenu</a>
+    <Navbar />
+    <main id="main" class="page">
+      <slot />
+    </main>
+    <Footer />
+
+    <script>
+      import '../scripts/code-copy';
+      import '../scripts/emoji';
+    </script>
+  </body>
+</html>
