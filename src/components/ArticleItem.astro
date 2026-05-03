@@ -1,0 +1,28 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import { formatAbsoluteDate, readTimeMinutes } from '../utils/relativeDate';
+
+interface Props {
+  post: CollectionEntry<'articles'>;
+  body?: string;
+  showExcerpt?: boolean;
+}
+const { post, body = '', showExcerpt = true } = Astro.props;
+const { data, id } = post;
+const slug = id.replace(/\/index$/, '');
+const url = `/articles/${slug}`;
+const readTime = data.readTime ?? readTimeMinutes(body);
+const dateStr = formatAbsoluteDate(data.date);
+---
+
+<article class="article-item">
+  <p class="item-eyebrow">
+    <span class="leaf">❦</span>
+    <span>{data.type}</span>
+    <span> · </span>
+    <span>{readTime} min</span>
+  </p>
+  <h3><a href={url}>{data.title}</a></h3>
+  {showExcerpt && data.excerpt && <p class="item-excerpt">{data.excerpt}</p>}
+  <p class="item-meta">{dateStr}</p>
+</article>

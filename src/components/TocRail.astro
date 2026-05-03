@@ -1,59 +1,58 @@
 ---
 import type { MarkdownHeading } from 'astro';
-
-interface Props {
-  headings: MarkdownHeading[];
-}
-
+interface Props { headings: MarkdownHeading[]; }
 const { headings } = Astro.props;
-const filtered = headings.filter((h) => h.depth === 2 || h.depth === 3);
+const items = headings.filter((h) => h.depth === 2 || h.depth === 3);
 ---
 
-{filtered.length > 0 && (
-  <nav class="toc-rail" aria-label="Sommaire">
+{items.length > 0 && (
+  <aside class="toc-rail">
+    <button class="toc-summary" type="button" aria-expanded="false" aria-controls="toc-body">Table des matières</button>
     <p class="toc-title">Sommaire</p>
-    <ol class="toc-list">
-      {filtered.map((h) => (
-        <li class={`depth-${h.depth}`}>
-          <a href={`#${h.slug}`} data-toc-target={h.slug}>{h.text}</a>
-        </li>
-      ))}
-    </ol>
-  </nav>
+    <div class="toc-body" id="toc-body">
+      <ol>
+        {items.map((h) => (
+          <li class={`depth-${h.depth}`}><a href={`#${h.slug}`}>{h.text}</a></li>
+        ))}
+      </ol>
+    </div>
+  </aside>
 )}
 
 <script>
-  // Scrollspy: highlight the closest visible heading in the TOC.
-  function setupScrollspy() {
-    const rail = document.querySelector<HTMLElement>('.toc-rail');
+  function setupToc() {
+    const rail = document.querySelector('.toc-rail');
     if (!rail) return;
-    const links = rail.querySelectorAll<HTMLAnchorElement>('a[data-toc-target]');
-    if (links.length === 0) return;
+    const summary = rail.querySelector('.toc-summary');
+    summary?.addEventListener('click', () => {
+      rail.classList.toggle('open');
+      const expanded = rail.classList.contains('open');
+      summary.setAttribute('aria-expanded', String(expanded));
+    });
 
-    const targetIds = Array.from(links).map((a) => a.dataset.tocTarget!);
-    const headings = targetIds
+    const links = rail.querySelectorAll<HTMLAnchorElement>('.toc-body a');
+    const idToLink = new Map<string, HTMLAnchorElement>();
+    links.forEach((a) => {
+      const id = a.getAttribute('href')?.slice(1);
+      if (id) idToLink.set(id, a);
+    });
+    const headings = Array.from(idToLink.keys())
       .map((id) => document.getElementById(id))
-      .filter((el): el is HTMLElement => el !== null);
+      .filter((el): el is HTMLElement => Boolean(el));
+    if (headings.length === 0) return;
 
     const observer = new IntersectionObserver(
       (entries) => {
-        entries.forEach((entry) => {
-          const link = rail.querySelector<HTMLAnchorElement>(
-            `a[data-toc-target="${entry.target.id}"]`,
-          );
-          if (!link) return;
-          if (entry.isIntersecting) {
-            rail.querySelectorAll('a.active').forEach((a) => a.classList.remove('active'));
-            link.classList.add('active');
+        entries.forEach((e) => {
+          if (e.isIntersecting) {
+            links.forEach((l) => l.classList.remove('active'));
+            idToLink.get(e.target.id)?.classList.add('active');
           }
         });
       },
-      { rootMargin: '-20% 0px -70% 0px', threshold: 0 },
+      { rootMargin: '-20% 0px -70% 0px', threshold: 0 }
     );
-
     headings.forEach((h) => observer.observe(h));
   }
-
-  setupScrollspy();
-  document.addEventListener('astro:page-load', setupScrollspy);
+  document.addEventListener('astro:page-load', setupToc);
 </script>

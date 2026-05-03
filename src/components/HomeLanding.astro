@@ -1,0 +1,36 @@
+---
+import GardenCard from './GardenCard.astro';
+import ArticleItem from './ArticleItem.astro';
+import type { CollectionEntry } from 'astro:content';
+
+interface Props {
+  garden: CollectionEntry<'garden'>[];
+  articles: CollectionEntry<'articles'>[];
+}
+const { garden, articles } = Astro.props;
+---
+
+<section class="home-landing">
+  <div class="home-col home-col--garden">
+    <p class="col-eyebrow eyebrow-garden">🌿 Jardin Numérique</p>
+    <h2>Jardin Numérique</h2>
+    <p class="col-dek">Notes vivantes, en cours d'arrosage. Idées qui poussent plus ou moins lentement.</p>
+    <ul class="col-list">
+      {garden.slice(0, 3).map((post) => (
+        <li><GardenCard post={post} showExcerpt={false} /></li>
+      ))}
+    </ul>
+    <a href="/jardin" class="col-cta">Voir tout le jardin →</a>
+  </div>
+  <div class="home-col home-col--articles">
+    <p class="col-eyebrow eyebrow-articles">❦ Articles</p>
+    <h2>Articles</h2>
+    <p class="col-dek">Pièces finies. Long-form, plus posées, publiées dans leur état définitif.</p>
+    <ul class="col-list">
+      {articles.slice(0, 3).map((post) => (
+        <li><ArticleItem post={post} showExcerpt={false} /></li>
+      ))}
+    </ul>
+    <a href="/articles" class="col-cta">Tous les articles →</a>
+  </div>
+</section>

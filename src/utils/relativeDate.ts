@@ -24,3 +24,10 @@ export function readTimeMinutes(text: string, wordsPerMinute = 220): number {
   const words = text.trim().split(/\s+/).length;
   return Math.max(1, Math.round(words / wordsPerMinute));
 }
+
+export function formatPlantedTended(planted: Date, tended?: Date | null): string {
+  const plantedStr = `Planté ${formatRelativeDate(planted)}`;
+  if (!tended) return plantedStr;
+  if (tended.getTime() === planted.getTime()) return plantedStr;
+  return `${plantedStr} · arrosé ${formatRelativeDate(tended)}`;
+}
