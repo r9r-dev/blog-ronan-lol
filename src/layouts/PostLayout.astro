@@ -1,44 +1,70 @@
 ---
 import BaseLayout from './BaseLayout.astro';
 import TocRail from '../components/TocRail.astro';
-import MetaRail from '../components/MetaRail.astro';
-import { formatRelativeDate, formatAbsoluteDate } from '../utils/relativeDate';
+import NotesRail from '../components/NotesRail.astro';
+import { formatRelativeDate, formatAbsoluteDate, readTimeMinutes } from '../utils/relativeDate';
+import { stageGlyph, stageLabel } from '../utils/growthStage';
 import type { CollectionEntry } from 'astro:content';
 import type { MarkdownHeading } from 'astro';
 
+interface NoteEntry { num: number; html: string; }
+
 interface Props {
-  post: CollectionEntry<'posts'>;
+  post: CollectionEntry<'garden'> | CollectionEntry<'articles'>;
   headings: MarkdownHeading[];
-  readTime: number;
+  body: string;
+  notes?: NoteEntry[];
 }
 
-const { post, headings, readTime } = Astro.props;
-const { data } = post;
-const relDate = formatRelativeDate(data.date);
-const absDate = formatAbsoluteDate(data.date);
+const { post, headings, body, notes = [] } = Astro.props;
+const { data, collection } = post;
+const isGarden = collection === 'garden';
+
+const readTime = (data as any).readTime ?? readTimeMinutes(body);
+const plantedRel = formatRelativeDate(data.date);
+const plantedAbs = formatAbsoluteDate(data.date);
+const tendedRel = isGarden && (data as any).lastTended ? formatRelativeDate((data as any).lastTended) : null;
+
+const backHref = isGarden ? '/jardin' : '/articles';
+const backLabel = isGarden ? 'Retour au jardin' : 'Retour aux articles';
+
+const stage = isGarden ? ((data as any).growthStage as 'seedling' | 'budding' | 'evergreen' | undefined) : null;
+const articleType = !isGarden ? ((data as any).type as string | undefined) : null;
 ---
 
 <BaseLayout title={data.title} description={data.excerpt}>
-  <article class="post-card post-full">
-    <a href="/" class="back-button">Retour au carnet</a>
-    <header class="post-header">
-      <p class="post-eyebrow">
-        <span class="post-eyebrow-type">{data.type ?? 'Note'}</span>
-        <span class="post-eyebrow-leaf" aria-hidden="true">❦</span>
-        <span class="post-eyebrow-date" title={absDate}>Planté {relDate}</span>
+  <article class="article-grid">
+
+    <header class="article-header">
+      <a href={backHref} class="back-button">{backLabel}</a>
+      <p class="article-eyebrow">
+        {isGarden && stage ? (
+          <span class={`stage stage--${stage}`}>{stageGlyph(stage)} {stageLabel(stage)}</span>
+        ) : (
+          <span class="type">{articleType}</span>
+        )}
+        {!isGarden && (
+          <>
+            <span class="dot" aria-hidden="true">·</span>
+            <span class="read-time">{readTime} min de lecture</span>
+          </>
+        )}
       </p>
-      <h1 class="post-title">{data.title}</h1>
-      <div class="post-meta">
-        <span class="post-author">{data.author}</span>
-        <span class="post-read-time">{readTime} min de lecture</span>
-      </div>
-      {data.tags && data.tags.length > 0 && (
-        <div class="post-tags">
-          {data.tags.map((tag) => (
-            <a class="post-tag" href={`/tags/${encodeURIComponent(tag.toLowerCase())}`}>{tag}</a>
-          ))}
+      <h1>{data.title}</h1>
+      {data.excerpt && <p class="article-dek" set:html={data.excerpt} />}
+      <div class="article-meta">
+        {data.tags && data.tags.length > 0 && (
+          <div class="tags">
+            {data.tags.map((tag: string) => (
+              <a class="tag" href={`/tags/${encodeURIComponent(tag.toLowerCase())}`}>{tag}</a>
+            ))}
+          </div>
+        )}
+        <div class="dates">
+          <span title={plantedAbs}>Planté {plantedRel}</span>
+          {tendedRel && <><br /><span>Arrosé {tendedRel}</span></>}
         </div>
-      )}
+      </div>
     </header>
 
     <TocRail headings={headings} />
@@ -47,6 +73,6 @@ const absDate = formatAbsoluteDate(data.date);
       <slot />
     </div>
 
-    <MetaRail date={data.date} readTime={readTime} />
+    <NotesRail notes={notes} />
   </article>
 </BaseLayout>
