@@ -18,6 +18,7 @@ bun-debug.log*
 .impeccable-live/
 .vscode/
 .claude/
+.superpowers/
 
 
 # environment variables
