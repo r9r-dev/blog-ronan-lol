@@ -1,0 +1,21 @@
+---
+import { getCollection, render } from 'astro:content';
+import PostLayout from '../../layouts/PostLayout.astro';
+
+export async function getStaticPaths() {
+  const posts = await getCollection('garden', ({ data }) => !data.draft);
+  return posts.map((post) => {
+    const slug = post.id.replace(/\/index$/, '');
+    return { params: { slug }, props: { post } };
+  });
+}
+
+const { post } = Astro.props;
+const { Content, headings } = await render(post);
+const body = (post as any).body ?? '';
+const notes = ((post.data as any).notes ?? null) as Array<{ num: number; html: string }> | null;
+---
+
+<PostLayout post={post} headings={headings} body={body} notes={notes ?? []}>
+  <Content />
+</PostLayout>

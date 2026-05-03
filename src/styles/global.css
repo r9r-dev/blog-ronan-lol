@@ -1534,3 +1534,23 @@ body:has(.post-full) .page-header { display: none; }
   grid-template-columns: repeat(auto-fill, minmax(min(20rem, 100%), 1fr));
   gap: var(--s-7);
 }
+
+/* ───────── home hero ───────── */
+.home-hero { margin-bottom: var(--s-8); }
+.hero-title {
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: var(--t-hero);
+  line-height: var(--lead-tight);
+  letter-spacing: -0.015em;
+  color: var(--color-text-strong);
+  text-wrap: balance;
+  max-width: 22ch;
+  margin-bottom: var(--s-5);
+}
+.hero-title em {
+  font-family: var(--font-body);
+  font-weight: 400;
+  font-style: italic;
+  color: var(--color-salmon);
+}

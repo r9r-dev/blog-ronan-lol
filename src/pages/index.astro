@@ -1,34 +1,26 @@
 ---
 import { getCollection } from 'astro:content';
 import BaseLayout from '../layouts/BaseLayout.astro';
-import PostCard from '../components/PostCard.astro';
+import HomeLanding from '../components/HomeLanding.astro';
 
-const posts = (await getCollection('posts', ({ data }) => !data.draft))
+const garden = (await getCollection('garden', ({ data }) => !data.draft))
+  .sort((a, b) => {
+    const aT = (a.data.lastTended ?? a.data.date).getTime();
+    const bT = (b.data.lastTended ?? b.data.date).getTime();
+    return bT - aT;
+  });
+const articles = (await getCollection('articles', ({ data }) => !data.draft))
   .sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
 
-const total = posts.length;
-const [featured, ...rest] = posts;
+const totalAll = garden.length + articles.length;
 ---
 
-<BaseLayout title="ronan.lol" description="Carnet de Ronan Lamour. Notes techniques, lectures et expériences.">
-  <header class="page-header">
-    <p class="page-eyebrow">
-      <span class="page-count">{total}</span>
-      <span class="page-eyebrow-label">Le carnet</span>
-    </p>
-    <h1 class="page-title">Le carnet de Ronan</h1>
-    <p class="page-dek">
-      Une collection d'essais, de notes, et d'expériences techniques que je continue à arroser.
-    </p>
-    <hr class="page-rule" />
+<BaseLayout title="ronan.lol" description="Carnet de Ronan Lamour — notes, articles, expériences.">
+  <header class="page-header home-hero">
+    <p class="page-eyebrow"><span class="page-count">{totalAll}</span> Le carnet de Ronan</p>
+    <h1 class="hero-title">Notes, <em>essais</em>, et expériences techniques que j'arrose.</h1>
+    <p class="page-dek">Un coin du web où je plante des idées sur l'ingénierie, le design, et tout ce que je n'ai pas encore compris.</p>
   </header>
 
-  <section class="blog-posts" aria-label="Articles">
-    {featured && <PostCard post={featured} featured />}
-    {rest.length > 0 && (
-      <div class="posts-grid">
-        {rest.map((post) => <PostCard post={post} />)}
-      </div>
-    )}
-  </section>
+  <HomeLanding garden={garden} articles={articles} />
 </BaseLayout>
