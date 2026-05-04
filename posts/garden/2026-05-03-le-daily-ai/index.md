@@ -5,6 +5,7 @@ author: "The Newsletter Girl"
 date: 2026-05-03
 tags: ai, newsletter, tendances, quotidien
 excerpt: "urgences dopées à l'ia, hollywood verrouille, musique générée déborde, et créateurs bousculent les apps"
+growthStage: seedling
 ---
 
 _urgences dopées à l'ia, hollywood verrouille, musique générée déborde, et créateurs bousculent les apps_
