@@ -643,7 +643,7 @@ body:has(.post-full) .page-header { display: none; }
   font-family: var(--font-body);
   font-style: normal;
   font-weight: 400;
-  font-size: var(--t-md);
+  font-size: clamp(1.375rem, 1.6vw, 1.625rem);  /* 22-26px */
   line-height: 1.45;
   color: var(--color-text-soft);
   margin-bottom: var(--s-6);
@@ -852,13 +852,14 @@ body:has(.post-full) .page-header { display: none; }
 /* ───────── post body ───────── */
 .post-content {
   font-family: var(--font-body);
-  font-size: var(--t-base);
-  line-height: var(--lead-body);
+  font-size: 1.375rem;       /* 22px — Maggie's article body */
+  line-height: 1.55;          /* 33px on 22px, generous reading */
   color: var(--color-text);
   text-wrap: pretty;
   hyphens: auto;
 }
-.post-content > * + * { margin-top: var(--s-4); }
+.post-content > * + * { margin-top: 1.5rem; }
+.post-content > p + p { margin-top: 1.75rem; }
 
 .post-content h1 {
   font-family: var(--font-display);
