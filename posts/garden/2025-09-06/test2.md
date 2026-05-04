@@ -7,8 +7,6 @@ excerpt: Ceci est un article de test pour vérifier que les posts dans les dossi
 growthStage: evergreen
 ---
 
-# Test Article 2
-
 Ceci est un article de test pour vérifier que le nouveau système de lecture des posts fonctionne correctement.
 
 ## Fonctionnalités testées

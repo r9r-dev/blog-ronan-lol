@@ -7,8 +7,6 @@ excerpt: "Maîtrisez les React Hooks avec ce guide complet couvrant tous les hoo
 growthStage: evergreen
 ---
 
-# React Hooks : Le Guide Complet avec Exemples Pratiques
-
 Les React Hooks ont transformé la façon dont nous écrivons des composants React. Fini les classes complexes, place aux composants fonctionnels élégants et réutilisables. Découvrons ensemble comment tirer le meilleur parti de cette fonctionnalité puissante.
 
 ## Introduction aux Hooks

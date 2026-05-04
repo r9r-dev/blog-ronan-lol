@@ -13,11 +13,6 @@ const posts = (await getCollection('garden', ({ data }) => !data.draft))
 const total = posts.length;
 
 const allTopics = Array.from(new Set(posts.flatMap((p) => p.data.tags ?? []))).slice(0, 8);
-const stages: Array<['seedling' | 'budding' | 'evergreen', string, string]> = [
-  ['evergreen', '🌲 Evergreen', 'stage-evergreen'],
-  ['budding', '🌿 Budding', 'stage-budding'],
-  ['seedling', '🌱 Seedling', 'stage-seedling'],
-];
 ---
 
 <BaseLayout title="Jardin Numérique — ronan.lol" description="Notes vivantes, en cours d'arrosage.">
@@ -36,15 +31,6 @@ const stages: Array<['seedling' | 'budding' | 'evergreen', string, string]> = [
         <a href="/jardin" class="filter-link active">Tout</a>
         {allTopics.map((t) => (
           <a href={`/tags/${encodeURIComponent(t.toLowerCase())}`} class="filter-link">{t}</a>
-        ))}
-      </div>
-    </div>
-    <div class="filter-group">
-      <span class="filter-label">Étape</span>
-      <div class="filter-list">
-        <a href="/jardin" class="filter-link active">Tout</a>
-        {stages.map(([s, label, cls]) => (
-          <a href={`/jardin?stage=${s}`} class={`filter-link ${cls}`}>{label}</a>
         ))}
       </div>
     </div>

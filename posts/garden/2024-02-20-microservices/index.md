@@ -7,8 +7,6 @@ excerpt: "Explorez l'architecture microservices, ses avantages, ses défis et le
 growthStage: evergreen
 ---
 
-# Architecture Microservices : Avantages, Défis et Bonnes Pratiques
-
 L'architecture microservices a révolutionné la façon dont nous concevons et déployons des applications modernes. Mais est-ce la solution miracle pour tous les projets ? Explorons ensemble ce paradigme architectural.
 
 ## Qu'est-ce que l'architecture microservices ?

@@ -7,8 +7,6 @@ excerpt: "Découvrez comment TypeScript peut transformer votre expérience de d�
 growthStage: evergreen
 ---
 
-# Premiers pas avec TypeScript : Guide complet pour débutants
-
 TypeScript est devenu un outil incontournable dans le développement web moderne. Si vous êtes développeur JavaScript et que vous hésitez encore à franchir le pas, cet article est fait pour vous.
 
 ## Pourquoi TypeScript ?
