@@ -33,7 +33,7 @@ const articleType = !isGarden ? ((data as any).type as string | undefined) : nul
 ---
 
 <BaseLayout title={data.title} description={data.excerpt}>
-  <article class="article-grid">
+  <article class:list={['article-grid', { 'has-notes': notes.length > 0 }]}>
 
     <header class="article-header">
       <a href={backHref} class="back-button">{backLabel}</a>

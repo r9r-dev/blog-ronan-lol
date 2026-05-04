@@ -13,14 +13,11 @@ const slug = id.replace(/\/index$/, '');
 const url = `/jardin/${slug}`;
 const meta = formatPlantedTended(data.date, data.lastTended);
 const topic = data.tags?.[0] ?? '';
-const coverIdx = (slug.charCodeAt(0) % 5) + 1;
 ---
 
 <a class="garden-card" href={url}>
-  {data.cover ? (
+  {data.cover && (
     <div class="card-thumb" style={`background-image: url('${data.cover}');`}></div>
-  ) : (
-    <div class={`card-thumb no-img card-cover-${coverIdx}`}></div>
   )}
   <p class="card-eyebrow">
     <span class={stageClass(data.growthStage)}>{stageGlyph(data.growthStage)} {stageLabel(data.growthStage)}</span>
