@@ -1554,3 +1554,44 @@ body:has(.post-full) .page-header { display: none; }
   font-style: italic;
   color: var(--color-salmon);
 }
+
+/* ───────── tag pages ───────── */
+.section-heading {
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: var(--t-xl);
+  color: var(--color-text-strong);
+  margin-bottom: var(--s-5);
+}
+.tag-cloud {
+  list-style: none; padding: 0;
+  display: flex; flex-wrap: wrap; gap: var(--s-3) var(--s-5);
+  font-family: var(--font-body);
+  font-size: var(--t-md);
+}
+.tag-cloud li { display: inline; }
+.tag-cloud a {
+  color: var(--color-link);
+  text-decoration: none;
+  transition: color var(--t-fast) var(--ease);
+}
+.tag-cloud a:hover { color: var(--color-link-hover); }
+.tag-count {
+  font-family: var(--font-sans);
+  font-size: 0.7em;
+  color: var(--color-text-quiet);
+  margin-left: 0.4em;
+  vertical-align: super;
+}
+
+/* ───────── Pagefind reskin ───────── */
+.pagefind-host {
+  --pagefind-ui-primary: var(--color-link);
+  --pagefind-ui-text: var(--color-text);
+  --pagefind-ui-background: var(--color-bg);
+  --pagefind-ui-border: var(--color-rule);
+  --pagefind-ui-tag: var(--color-bg-card);
+  --pagefind-ui-border-radius: var(--radius);
+  --pagefind-ui-font: var(--font-body);
+}
+.pagefind-host .pagefind-ui__form { padding: 0; }

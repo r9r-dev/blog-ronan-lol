@@ -2,63 +2,25 @@
 import { getCollection } from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 
-const posts = await getCollection('posts', ({ data }) => !data.draft);
-const tagCounts = new Map<string, number>();
-for (const post of posts) {
-  for (const tag of post.data.tags ?? []) {
-    tagCounts.set(tag, (tagCounts.get(tag) ?? 0) + 1);
-  }
-}
-const tags = [...tagCounts.entries()].sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]));
+const garden = await getCollection('garden', ({ data }) => !data.draft);
+const articles = await getCollection('articles', ({ data }) => !data.draft);
+const counts = new Map<string, number>();
+[...garden, ...articles].forEach((p) => (p.data.tags ?? []).forEach((t: string) => {
+  const key = t.toLowerCase();
+  counts.set(key, (counts.get(key) ?? 0) + 1);
+}));
+const tags = Array.from(counts.entries()).sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]));
 ---
 
-<BaseLayout title="Tags · ronan.lol" description="Tous les sujets du carnet.">
+<BaseLayout title="Étiquettes — ronan.lol" description="Toutes les étiquettes du carnet.">
   <header class="page-header">
-    <p class="page-eyebrow">
-      <span class="page-count">{tags.length}</span>
-      <span class="page-eyebrow-label">Tags</span>
-    </p>
-    <h1 class="page-title">Tous les sujets</h1>
-    <p class="page-dek">Une vue par étiquette de ce qui pousse dans le carnet.</p>
-    <hr class="page-rule" />
+    <p class="page-eyebrow"><span class="page-count">{tags.length}</span> Étiquettes</p>
+    <h1 class="page-title">Étiquettes</h1>
   </header>
 
   <ul class="tag-cloud">
-    {tags.map(([tag, count], i) => (
-      <li>
-        <a class="post-tag" href={`/tags/${encodeURIComponent(tag.toLowerCase())}`} style={`--n: ${i};`}>
-          {tag} <span class="tag-count">· {count}</span>
-        </a>
-      </li>
+    {tags.map(([tag, count]) => (
+      <li><a href={`/tags/${encodeURIComponent(tag)}`}>#{tag}<span class="tag-count">{count}</span></a></li>
     ))}
   </ul>
 </BaseLayout>
-
-<style>
-  .tag-cloud {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-    display: flex;
-    flex-wrap: wrap;
-    gap: var(--s-3) var(--s-5);
-    font-family: var(--font-display);
-    font-style: italic;
-    font-size: var(--t-md);
-    font-variation-settings: "opsz" 144, "SOFT" 80;
-  }
-  .tag-cloud li { line-height: 1.4; }
-  .tag-cloud .post-tag::before { content: none; }
-  .tag-cloud .post-tag + .post-tag::before { content: none; }
-  .tag-cloud li:nth-child(5n+1) .post-tag { color: var(--color-crimson); }
-  .tag-cloud li:nth-child(5n+2) .post-tag { color: var(--color-medium-sea-blue); }
-  .tag-cloud li:nth-child(5n+3) .post-tag { color: var(--color-dark-salmon); }
-  .tag-cloud li:nth-child(5n+4) .post-tag { color: var(--color-gold); }
-  .tag-cloud li:nth-child(5n+5) .post-tag { color: var(--color-purple); }
-  .tag-count {
-    font-family: var(--font-mono);
-    font-style: normal;
-    font-size: var(--t-xs);
-    color: var(--color-text-quiet);
-  }
-</style>

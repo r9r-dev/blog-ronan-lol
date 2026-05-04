@@ -2,63 +2,25 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 ---
 
-<BaseLayout title="Rechercher · ronan.lol" description="Recherche dans le carnet.">
+<BaseLayout title="Recherche — ronan.lol" description="Cherche dans le carnet.">
   <header class="page-header">
-    <p class="page-eyebrow">
-      <span class="page-eyebrow-label">Recherche</span>
-    </p>
-    <h1 class="page-title">Rechercher</h1>
-    <p class="page-dek">Recherche full-text dans tous les écrits, indexée au build.</p>
-    <hr class="page-rule" />
+    <p class="page-eyebrow">Recherche plein-texte</p>
+    <h1 class="page-title">Recherche</h1>
+    <p class="page-dek">Tape un mot, une idée, un nom. Pagefind cherche dans tout le carnet.</p>
   </header>
 
-  <div id="search"></div>
+  <div id="search" class="pagefind-host"></div>
+
+  <link rel="stylesheet" href="/pagefind/pagefind-ui.css">
+  <script is:inline src="/pagefind/pagefind-ui.js"></script>
+  <script is:inline define:vars={{}}>
+    function initSearch() {
+      // Pagefind ships an unbundled UI global
+      if (typeof window.PagefindUI === 'undefined') return;
+      if (document.querySelector('#search .pagefind-ui')) return;
+      new window.PagefindUI({ element: '#search', resetStyles: false, showImages: false });
+    }
+    document.addEventListener('astro:page-load', initSearch);
+    if (document.readyState !== 'loading') initSearch();
+  </script>
 </BaseLayout>
-
-<link rel="stylesheet" href="/pagefind/pagefind-ui.css" />
-<script is:inline src="/pagefind/pagefind-ui.js"></script>
-<script is:inline>
-  window.addEventListener('DOMContentLoaded', () => {
-    new PagefindUI({
-      element: '#search',
-      showSubResults: true,
-      showImages: false,
-      translations: {
-        placeholder: 'Rechercher dans le carnet…',
-        clear_search: 'Effacer',
-        load_more: 'Charger plus',
-        search_label: 'Recherche',
-        filters_label: 'Filtres',
-        zero_results: 'Aucun résultat pour [SEARCH_TERM]',
-        many_results: '[COUNT] résultats pour [SEARCH_TERM]',
-        one_result: '[COUNT] résultat pour [SEARCH_TERM]',
-        alt_search: 'Aucun résultat pour [SEARCH_TERM]. Essayez plutôt [DIFFERENT_TERM]',
-        search_suggestion: 'Aucun résultat pour [SEARCH_TERM]. Essayez :',
-        searching: 'Recherche…',
-      },
-    });
-  });
-</script>
-
-<style is:global>
-  .pagefind-ui {
-    --pagefind-ui-primary: var(--color-link);
-    --pagefind-ui-text: var(--color-text);
-    --pagefind-ui-background: var(--color-bg-card);
-    --pagefind-ui-border: var(--color-rule);
-    --pagefind-ui-tag: var(--color-bg-tinted);
-    --pagefind-ui-border-radius: var(--radius);
-    --pagefind-ui-font: var(--font-body);
-  }
-  .pagefind-ui__search-input {
-    font-family: var(--font-display) !important;
-    font-style: italic;
-  }
-  .pagefind-ui__result-link {
-    font-family: var(--font-display) !important;
-    color: var(--color-text-strong) !important;
-  }
-  .pagefind-ui__result-excerpt {
-    color: var(--color-text-soft) !important;
-  }
-</style>

@@ -1,59 +1,45 @@
 ---
 import { getCollection } from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
-import PostCard from '../../components/PostCard.astro';
+import GardenCard from '../../components/GardenCard.astro';
+import ArticleItem from '../../components/ArticleItem.astro';
 
 export async function getStaticPaths() {
-  const posts = await getCollection('posts', ({ data }) => !data.draft);
-  const tagSet = new Map<string, string>();
-  for (const post of posts) {
-    for (const tag of post.data.tags ?? []) {
-      tagSet.set(tag.toLowerCase(), tag);
-    }
-  }
-
-  return [...tagSet.entries()].map(([slug, label]) => {
-    const filtered = posts
-      .filter((p) => (p.data.tags ?? []).some((t) => t.toLowerCase() === slug))
-      .sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
-    return {
-      params: { tag: slug },
-      props: { tag: label, posts: filtered },
-    };
-  });
+  const garden = await getCollection('garden', ({ data }) => !data.draft);
+  const articles = await getCollection('articles', ({ data }) => !data.draft);
+  const tags = new Set<string>();
+  [...garden, ...articles].forEach((p) => (p.data.tags ?? []).forEach((t: string) => tags.add(t.toLowerCase())));
+  return Array.from(tags).map((tag) => ({ params: { tag } }));
 }
 
-const { tag, posts } = Astro.props;
+const { tag } = Astro.params;
+const garden = await getCollection('garden', ({ data }) => !data.draft && (data.tags ?? []).some((t: string) => t.toLowerCase() === tag));
+const articles = await getCollection('articles', ({ data }) => !data.draft && (data.tags ?? []).some((t: string) => t.toLowerCase() === tag));
+const total = garden.length + articles.length;
 ---
 
-<BaseLayout title={`${tag} · ronan.lol`} description={`Articles tagués ${tag}.`}>
+<BaseLayout title={`#${tag} — ronan.lol`} description={`Tout ce qui touche à « ${tag} ».`}>
   <header class="page-header">
-    <p class="page-eyebrow">
-      <a class="page-eyebrow-back" href="/tags">← Tous les tags</a>
-    </p>
-    <h1 class="page-title">{tag}</h1>
-    <p class="page-dek">
-      {posts.length} {posts.length === 1 ? 'article étiqueté' : 'articles étiquetés'} {tag}.
-    </p>
-    <hr class="page-rule" />
+    <p class="page-eyebrow"><span class="page-count">· {total}</span> Étiquette</p>
+    <h1 class="page-title">#{tag}</h1>
+    <p class="page-dek">Tout ce que j'ai écrit qui touche à <em>{tag}</em>.</p>
   </header>
 
-  <section class="blog-posts" aria-label="Articles">
-    <div class="posts-grid">
-      {posts.map((post) => <PostCard post={post} />)}
-    </div>
-  </section>
-</BaseLayout>
+  {garden.length > 0 && (
+    <section style="margin-bottom: var(--s-8);">
+      <h2 class="section-heading">Dans le jardin</h2>
+      <div class="garden-grid">
+        {garden.map((post) => <GardenCard post={post} />)}
+      </div>
+    </section>
+  )}
 
-<style>
-  .page-eyebrow-back {
-    color: var(--color-eyebrow);
-    text-decoration: none;
-    font-family: var(--font-sans);
-    font-size: var(--t-xs);
-    font-weight: 700;
-    letter-spacing: 0.16em;
-    text-transform: uppercase;
-  }
-  .page-eyebrow-back:hover { color: var(--color-link-hover); }
-</style>
+  {articles.length > 0 && (
+    <section>
+      <h2 class="section-heading">Articles</h2>
+      <div class="articles-list">
+        {articles.map((post) => <ArticleItem post={post} />)}
+      </div>
+    </section>
+  )}
+</BaseLayout>
