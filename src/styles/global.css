@@ -689,7 +689,11 @@ body:has(.post-full) .page-header { display: none; }
 .toc-rail .toc-summary { display: none; }
 .toc-rail.is-collapsed .toc-title,
 .toc-rail.is-collapsed .toc-body { display: none; }
-.toc-rail.is-collapsed.is-expanded .toc-body { display: block; margin-top: var(--s-3); }
+.toc-rail.is-collapsed.is-expanded .toc-body {
+  display: block;
+  margin-top: var(--s-3);
+  animation: ml-rise-sm 280ms var(--ease-out-quart) both;
+}
 .toc-rail.is-collapsed .toc-summary {
   display: inline-flex;
   align-items: center;
@@ -706,6 +710,7 @@ body:has(.post-full) .page-header { display: none; }
   letter-spacing: 0.16em;
   text-transform: uppercase;
   transition: color var(--t-fast) var(--ease), border-color var(--t-fast) var(--ease);
+  animation: ml-rise-sm 280ms var(--ease-out-quart) both;
 }
 .toc-rail.is-collapsed .toc-summary::before {
   content: "";
@@ -927,16 +932,32 @@ body:has(.post-full) .page-header { display: none; }
 .post-content em { font-style: normal; color: var(--color-text-strong); }
 .post-content strong { color: var(--color-text-strong); font-weight: 700; }
 
-.post-content a {
+.post-content a,
+.sidenote-body a,
+.notes-rail .note a {
+  display: inline-block;
+  position: relative;
   color: var(--color-link);
   text-decoration: none;
-  border-bottom: 1px solid transparent;
-  transition: color var(--t-fast) var(--ease), border-color var(--t-fast) var(--ease);
+  background-image: linear-gradient(var(--color-accent), var(--color-accent));
+  background-position: 0 100%;
+  background-repeat: no-repeat;
+  background-size: 0 1.5px;
+  padding-bottom: 1px;
+  transition:
+    color var(--t-fast) var(--ease-out-quart),
+    transform var(--t-med) var(--ease-out-quart),
+    background-size var(--t-med) var(--ease-out-quart);
 }
 .post-content a:hover,
-.post-content a:focus-visible {
+.post-content a:focus-visible,
+.sidenote-body a:hover,
+.sidenote-body a:focus-visible,
+.notes-rail .note a:hover,
+.notes-rail .note a:focus-visible {
   color: var(--color-link-hover);
-  border-bottom-color: currentColor;
+  transform: translateY(-1px);
+  background-size: 100% 1.5px;
 }
 
 /* plain markdown blockquote — head-less quote-card variant */
@@ -1657,3 +1678,408 @@ body:has(.post-full) .page-header { display: none; }
   --pagefind-ui-font: var(--font-body);
 }
 .pagefind-host .pagefind-ui__form { padding: 0; }
+
+/* ─────────────────────────────────────────────────────────────
+ * Motion — quiet archival, brand-confident
+ *
+ * One coherent language: a soft entrance choreography on every
+ * page, hover feedback that whispers, scroll tracks reading,
+ * view transitions cross-fade. Nothing load-bearing, nothing
+ * announcing itself. The blanket prefers-reduced-motion guard
+ * at the top of this file disables everything below.
+ * ───────────────────────────────────────────────────────────── */
+
+:root {
+  --ease-out-quart: cubic-bezier(0.25, 1, 0.5, 1);
+  --ease-out-quint: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-out-expo:  cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes ml-fade {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+@keyframes ml-fade-out {
+  from { opacity: 1; }
+  to   { opacity: 0; }
+}
+@keyframes ml-rise {
+  from { opacity: 0; transform: translate3d(0, 8px, 0); }
+  to   { opacity: 1; transform: translate3d(0, 0, 0); }
+}
+@keyframes ml-rise-sm {
+  from { opacity: 0; transform: translate3d(0, 4px, 0); }
+  to   { opacity: 1; transform: translate3d(0, 0, 0); }
+}
+@keyframes ml-rise-from-l {
+  from { opacity: 0; transform: translate3d(-6px, 0, 0); }
+  to   { opacity: 1; transform: translate3d(0, 0, 0); }
+}
+@keyframes ml-pop {
+  0%   { transform: scale(1); }
+  50%  { transform: scale(1.06); }
+  100% { transform: scale(1); }
+}
+@keyframes ml-target-bg {
+  0%, 100% { background-color: transparent; }
+  18%      { background-color: rgba(232, 90, 171, 0.12); }
+}
+
+/* ───── page-load choreography ─────
+ * Order: navbar → main column → cards/list items.
+ * Re-fires on every astro:page-load thanks to ClientRouter,
+ * which clears + re-mounts the body subtree.
+ */
+
+.navbar { animation: ml-fade 480ms var(--ease-out-quart) both; }
+
+.page > * {
+  animation: ml-rise 520ms var(--ease-out-quart) both;
+}
+.page > :nth-child(1) { animation-delay: 80ms; }
+.page > :nth-child(2) { animation-delay: 160ms; }
+.page > :nth-child(3) { animation-delay: 220ms; }
+.page > :nth-child(4) { animation-delay: 280ms; }
+.page > :nth-child(n+5) { animation-delay: 340ms; }
+
+/* hero / index header reveals piece-by-piece instead of as a block */
+.page > .home-hero,
+.page > .page-header { animation: none; }
+.page > .home-hero > *,
+.page > .page-header > * {
+  animation: ml-rise 520ms var(--ease-out-quart) both;
+}
+.page > .home-hero > :nth-child(1),
+.page > .page-header > :nth-child(1) { animation-delay: 100ms; }
+.page > .home-hero > :nth-child(2),
+.page > .page-header > :nth-child(2) { animation-delay: 200ms; }
+.page > .home-hero > :nth-child(3),
+.page > .page-header > :nth-child(3) { animation-delay: 280ms; }
+.page > .home-hero > :nth-child(n+4),
+.page > .page-header > :nth-child(n+4) { animation-delay: 360ms; }
+
+/* listings: each card reveals with a small stagger after the header */
+.garden-grid > *,
+.articles-list > *,
+.tag-cloud > *,
+.home-col .col-list > * {
+  animation: ml-rise 480ms var(--ease-out-quart) both;
+}
+.garden-grid > :nth-child(1),
+.articles-list > :nth-child(1),
+.tag-cloud > :nth-child(1),
+.home-col .col-list > :nth-child(1) { animation-delay: 320ms; }
+.garden-grid > :nth-child(2),
+.articles-list > :nth-child(2),
+.tag-cloud > :nth-child(2),
+.home-col .col-list > :nth-child(2) { animation-delay: 380ms; }
+.garden-grid > :nth-child(3),
+.articles-list > :nth-child(3),
+.tag-cloud > :nth-child(3),
+.home-col .col-list > :nth-child(3) { animation-delay: 440ms; }
+.garden-grid > :nth-child(4),
+.articles-list > :nth-child(4),
+.tag-cloud > :nth-child(4) { animation-delay: 500ms; }
+.garden-grid > :nth-child(5),
+.articles-list > :nth-child(5),
+.tag-cloud > :nth-child(5) { animation-delay: 560ms; }
+.garden-grid > :nth-child(6),
+.articles-list > :nth-child(6),
+.tag-cloud > :nth-child(6) { animation-delay: 620ms; }
+.garden-grid > :nth-child(n+7),
+.articles-list > :nth-child(n+7),
+.tag-cloud > :nth-child(n+7) { animation-delay: 680ms; }
+
+/* home landing: animate columns + their children, not the wrapper */
+.page > .home-landing { animation: none; }
+.home-landing > .home-col { animation: ml-rise 540ms var(--ease-out-quart) both; }
+.home-landing > .home-col--garden   { animation-delay: 220ms; }
+.home-landing > .home-col--articles { animation-delay: 320ms; }
+
+/* ───── article page entrance ─────
+ * Header chunks rise in reading order, body and rails follow.
+ */
+.article-grid > .article-header,
+.article-grid > .toc-rail,
+.article-grid > .post-content { animation: ml-rise 520ms var(--ease-out-quart) both; }
+.article-grid > .article-header { animation-delay: 80ms; }
+.article-grid > .post-content   { animation-delay: 220ms; }
+.article-grid > .toc-rail       { animation-delay: 320ms; }
+
+.article-header > * { animation: ml-rise-sm 480ms var(--ease-out-quart) both; }
+.article-header > .back-button     { animation-delay: 100ms; animation-name: ml-rise-from-l; }
+.article-header > .article-eyebrow { animation-delay: 200ms; }
+.article-header > h1               { animation-delay: 260ms; }
+.article-header > .article-dek     { animation-delay: 340ms; }
+.article-header > .article-meta    { animation-delay: 420ms; }
+
+.article-meta .tags > * { animation: ml-fade 360ms var(--ease-out-quart) both; }
+.article-meta .tags > :nth-child(1) { animation-delay: 480ms; }
+.article-meta .tags > :nth-child(2) { animation-delay: 530ms; }
+.article-meta .tags > :nth-child(3) { animation-delay: 580ms; }
+.article-meta .tags > :nth-child(n+4) { animation-delay: 630ms; }
+
+/* sidenotes are JS-injected, fade on first paint */
+.sidenote-body  { animation: ml-fade 600ms var(--ease-out-quart) both; }
+.notes-rail .note { animation: ml-rise-sm 520ms var(--ease-out-quart) both; }
+
+/* ───── scroll-aware navbar ─────
+ * .is-scrolled toggled by scroll-effects.ts once past 8px.
+ */
+.navbar {
+  transition:
+    background-color var(--t-med) var(--ease-out-quart),
+    box-shadow var(--t-med) var(--ease-out-quart),
+    border-color var(--t-med) var(--ease-out-quart);
+}
+.navbar.is-scrolled {
+  background: rgba(28, 27, 24, 0.92);
+  box-shadow: 0 6px 22px -10px rgba(0, 0, 0, 0.55);
+  border-bottom-color: var(--color-rule);
+}
+
+/* reading progress bar — overlays the navbar's top edge while reading */
+.reading-progress {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background: var(--color-crimson);
+  transform: scaleX(0);
+  transform-origin: left center;
+  z-index: 30;
+  pointer-events: none;
+  will-change: transform;
+  opacity: 0;
+  transition: opacity var(--t-med) var(--ease-out-quart);
+}
+.reading-progress.is-active { opacity: 1; }
+
+/* ───── nav links: underline grow + active dwell ───── */
+.nav-link { position: relative; padding-bottom: 2px; }
+.nav-link::after {
+  content: "";
+  position: absolute;
+  left: 0; right: 0; bottom: 0;
+  height: 1px;
+  background: currentColor;
+  transform: scaleX(0);
+  transform-origin: left center;
+  transition: transform var(--t-med) var(--ease-out-quart);
+}
+.nav-link:hover::after,
+.nav-link:focus-visible::after { transform: scaleX(1); }
+.nav-link.active::after {
+  transform: scaleX(1);
+  transform-origin: center;
+  transition-duration: var(--t-slow);
+}
+
+/* ───── brand: tildes drift on hover, like sprigs flexing ───── */
+.brand-name { display: inline-block; }
+.brand-tilde {
+  display: inline-block;
+  color: var(--color-sea-blue);
+  margin: 0 0.35em;
+  transition:
+    transform 360ms var(--ease-out-quart),
+    color 220ms var(--ease-out-quart);
+}
+.brand:hover .brand-tilde--l { transform: translateX(-3px) rotate(-6deg); color: var(--color-salmon); }
+.brand:hover .brand-tilde--r { transform: translateX(3px)  rotate(6deg);  color: var(--color-salmon); }
+
+/* ───── TOC: active marker glides into the gutter ───── */
+.toc-rail .toc-body li { position: relative; }
+.toc-rail .toc-body li::after {
+  content: "";
+  position: absolute;
+  left: -1rem;
+  top: 0.7em;
+  height: 2px;
+  width: 0;
+  background: var(--color-accent);
+  border-radius: 1px;
+  opacity: 0;
+  transition:
+    width var(--t-med) var(--ease-out-quart),
+    opacity var(--t-fast) var(--ease-out-quart);
+}
+.toc-rail .toc-body li:has(a.active)::after { width: 0.6rem; opacity: 1; }
+.toc-rail .toc-body a {
+  display: inline-block;
+  transition:
+    color var(--t-fast) var(--ease-out-quart),
+    transform var(--t-med) var(--ease-out-quart);
+}
+.toc-rail .toc-body li:has(a.active) > a { transform: translateX(0.35rem); }
+.toc-rail .toc-body a:hover { transform: translateX(2px); }
+
+/* ───── sidenote ref hover + target highlight ───── */
+.sidenote-ref {
+  display: inline-block;
+  transition:
+    color var(--t-fast) var(--ease-out-quart),
+    transform var(--t-fast) var(--ease-out-quart);
+}
+.sidenote-ref:hover {
+  color: var(--color-bright-crimson);
+  transform: translateY(-1px);
+}
+.sidenote-body:target,
+.notes-rail .note:target {
+  animation: ml-target-bg 1.6s var(--ease-out-quart);
+}
+
+/* ───── garden card hover: thumb lifts (already in base), title shifts ───── */
+.garden-card h3 { transition: color var(--t-fast) var(--ease-out-quart); }
+.garden-card .stage-icon circle {
+  transform-origin: center;
+  transition: transform var(--t-med) var(--ease-out-quart);
+}
+.garden-card:hover .stage-icon circle { transform: scale(1.18); }
+
+/* ───── article-item leaf grows into the title's color on hover ───── */
+.article-item .leaf {
+  display: inline-block;
+  transform-origin: center;
+  transition:
+    transform var(--t-med) var(--ease-out-quart),
+    color var(--t-fast) var(--ease-out-quart);
+}
+.article-item:hover .leaf {
+  transform: scale(1.5);
+  color: var(--color-link);
+}
+.article-item h3 a { transition: color var(--t-fast) var(--ease-out-quart); }
+
+/* ───── code-copy success pulse ───── */
+.code-copy-button.copied {
+  animation: ml-pop 320ms var(--ease-out-quart);
+}
+
+/* ───── footer RSS pill: outline draws around on hover ───── */
+.site-footer-rss { position: relative; }
+.site-footer-rss::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: var(--radius-pill);
+  border: 1px solid var(--color-link);
+  opacity: 0;
+  transform: scale(0.96);
+  transition:
+    opacity var(--t-med) var(--ease-out-quart),
+    transform var(--t-med) var(--ease-out-quart);
+  pointer-events: none;
+}
+.site-footer-rss:hover::before { opacity: 1; transform: scale(1); }
+
+/* ───── filter links: shared underline language ───── */
+.filter-list .filter-link { position: relative; padding-bottom: 2px; }
+.filter-list .filter-link::after {
+  content: "";
+  position: absolute;
+  left: 0; right: 0; bottom: 0;
+  height: 1px;
+  background: currentColor;
+  transform: scaleX(0);
+  transform-origin: left center;
+  transition: transform var(--t-med) var(--ease-out-quart);
+}
+.filter-list .filter-link:hover::after,
+.filter-list .filter-link.active::after { transform: scaleX(1); }
+
+/* ───── tag cloud links: same underline language as nav ───── */
+.tag-cloud a { position: relative; padding-bottom: 2px; }
+.tag-cloud a::after {
+  content: "";
+  position: absolute;
+  left: 0; right: 0; bottom: 0;
+  height: 1px;
+  background: currentColor;
+  transform: scaleX(0);
+  transform-origin: left center;
+  transition: transform var(--t-med) var(--ease-out-quart);
+}
+.tag-cloud a:hover::after { transform: scaleX(1); }
+
+/* ───── view transitions: cross-fade, no slide ───── */
+::view-transition-old(root) {
+  animation: ml-fade-out 220ms var(--ease-out-quart) both;
+}
+::view-transition-new(root) {
+  animation: ml-rise-sm 320ms var(--ease-out-quart) both;
+}
+
+/* ───── CTA arrows: pseudo-rendered, slide right on hover ─────
+ * Component markup omits the trailing arrow; this provides it,
+ * so JS-free hover slides work without breaking the link string.
+ */
+.home-col .col-cta::after,
+.home-col .col-cta::before { /* before reserved for icon variants */ }
+.home-col .col-cta::after {
+  content: "→";
+  display: inline-block;
+  margin-left: 0.45em;
+  transition:
+    transform var(--t-med) var(--ease-out-quart),
+    color var(--t-fast) var(--ease-out-quart);
+}
+.home-col .col-cta:hover::after,
+.home-col .col-cta:focus-visible::after {
+  transform: translateX(4px);
+  color: var(--color-salmon);
+}
+.home-col .col-cta {
+  transition: color var(--t-fast) var(--ease-out-quart);
+}
+
+/* read-more inside post-card: same arrow language */
+.read-more {
+  position: relative;
+}
+.read-more::after {
+  content: "→";
+  display: inline-block;
+  margin-left: 0.4em;
+  transition:
+    transform var(--t-med) var(--ease-out-quart),
+    color var(--t-fast) var(--ease-out-quart);
+}
+.read-more:hover::after,
+.read-more:focus-visible::after {
+  transform: translateX(3px);
+  color: var(--color-salmon);
+}
+
+/* article back-button arrow slides left on hover */
+.article-header .back-button::before {
+  display: inline-block;
+  transition:
+    transform var(--t-med) var(--ease-out-quart),
+    color var(--t-fast) var(--ease-out-quart);
+}
+.article-header .back-button:hover::before,
+.article-header .back-button:focus-visible::before {
+  transform: translateX(-3px);
+  color: var(--color-link);
+}
+
+/* ───── reflow on viewport breakpoint cross ─────
+ * scroll-effects.ts toggles .is-reflowing on body briefly when the
+ * sidenote / TOC layout reflows between (≥1340) (1024-1339) (<1024)
+ * breakpoints. Anything that visually moves between these gets a soft
+ * fade-back-in, so the reposition doesn't feel like a snap.
+ */
+@keyframes ml-reflow {
+  0%   { opacity: 0; transform: translate3d(0, 3px, 0); }
+  100% { opacity: 1; transform: translate3d(0, 0, 0); }
+}
+.is-reflowing .article-grid > *,
+.is-reflowing .sidenote-body,
+.is-reflowing .notes-rail,
+.is-reflowing .notes-rail .note {
+  animation: ml-reflow 420ms var(--ease-out-quart);
+}
+

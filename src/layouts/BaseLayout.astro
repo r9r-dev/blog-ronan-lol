@@ -53,6 +53,7 @@ const canonical = new URL(Astro.url.pathname, Astro.site).toString();
   </head>
   <body>
     <a href="#main" class="skip-link">Aller au contenu</a>
+    <div class="reading-progress" aria-hidden="true"></div>
     <Navbar />
     <main id="main" class="page">
       <slot />
@@ -62,6 +63,7 @@ const canonical = new URL(Astro.url.pathname, Astro.site).toString();
     <script>
       import '../scripts/code-copy';
       import '../scripts/emoji';
+      import '../scripts/scroll-effects';
     </script>
   </body>
 </html>

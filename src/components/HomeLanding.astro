@@ -21,7 +21,7 @@ const { garden, articles } = Astro.props;
         <li><GardenCard post={post} showExcerpt={false} /></li>
       ))}
     </ul>
-    <a href="/jardin" class="col-cta">Voir tout le jardin →</a>
+    <a href="/jardin" class="col-cta">Voir tout le jardin</a>
   </div>
   <div class="home-col home-col--articles">
     <p class="col-eyebrow eyebrow-articles">· Notes</p>
@@ -32,6 +32,6 @@ const { garden, articles } = Astro.props;
         <li><ArticleItem post={post} showExcerpt={false} /></li>
       ))}
     </ul>
-    <a href="/articles" class="col-cta">Tous les articles →</a>
+    <a href="/articles" class="col-cta">Tous les articles</a>
   </div>
 </section>

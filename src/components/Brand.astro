@@ -2,4 +2,6 @@
 const { class: cls = '' } = Astro.props;
 ---
 
-<a href="/" class:list={['brand', cls]} aria-label="ronan.lol">~ ronan ~</a>
+<a href="/" class:list={['brand', cls]} aria-label="ronan.lol">
+  <span class="brand-tilde brand-tilde--l" aria-hidden="true">~</span><span class="brand-name">ronan</span><span class="brand-tilde brand-tilde--r" aria-hidden="true">~</span>
+</a>
