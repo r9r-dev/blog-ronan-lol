@@ -1180,6 +1180,20 @@ body:has(.post-full) .page-header { display: none; }
   margin-top: var(--s-5);
   letter-spacing: 0.04em;
 }
+.site-footer-credit {
+  font-family: var(--font-body);
+  font-style: italic;
+  font-size: var(--t-sm);
+  color: var(--color-text-soft);
+  margin-top: var(--s-2);
+}
+.site-footer-credit a {
+  color: var(--color-link);
+  text-decoration: none;
+  border-bottom: 1px solid transparent;
+  transition: border-color var(--t-fast) var(--ease), color var(--t-fast) var(--ease);
+}
+.site-footer-credit a:hover { color: var(--color-link-hover); border-bottom-color: currentColor; }
 .site-footer-block--nav {
   display: grid;
   grid-template-columns: 1fr 1fr;
