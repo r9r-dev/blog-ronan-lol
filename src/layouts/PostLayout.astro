@@ -2,7 +2,8 @@
 import BaseLayout from './BaseLayout.astro';
 import TocRail from '../components/TocRail.astro';
 import { formatRelativeDate, formatAbsoluteDate, readTimeMinutes } from '../utils/relativeDate';
-import { stageGlyph, stageLabel } from '../utils/growthStage';
+import { stageLabel } from '../utils/growthStage';
+import StageIcon from '../components/StageIcon.astro';
 import type { CollectionEntry } from 'astro:content';
 import type { MarkdownHeading } from 'astro';
 
@@ -40,7 +41,7 @@ const notesJSON = JSON.stringify(notes);
       <a href={backHref} class="back-button">{backLabel}</a>
       <p class="article-eyebrow">
         {isGarden && stage ? (
-          <span class={`stage stage--${stage}`}>{stageGlyph(stage)} {stageLabel(stage)}</span>
+          <span class={`stage stage--${stage}`}><StageIcon stage={stage} />{stageLabel(stage)}</span>
         ) : (
           <span class="type">{articleType}</span>
         )}

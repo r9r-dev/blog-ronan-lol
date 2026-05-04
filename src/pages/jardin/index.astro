@@ -2,6 +2,7 @@
 import { getCollection } from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import GardenCard from '../../components/GardenCard.astro';
+import StageIcon from '../../components/StageIcon.astro';
 
 const posts = (await getCollection('garden', ({ data }) => !data.draft))
   .sort((a, b) => {
@@ -17,7 +18,7 @@ const allTopics = Array.from(new Set(posts.flatMap((p) => p.data.tags ?? []))).s
 
 <BaseLayout title="Jardin Numérique — ronan.lol" description="Notes vivantes, en cours d'arrosage.">
   <header class="page-header">
-    <p class="page-eyebrow eyebrow-garden">🌿 Jardin Numérique <span class="page-count">· {total}</span></p>
+    <p class="page-eyebrow eyebrow-garden"><StageIcon stage="evergreen" />Jardin Numérique <span class="page-count">· {total}</span></p>
     <h1 class="page-title">Le Jardin</h1>
     <p class="page-dek">
       Une collection de notes, d'essais et d'idées à moitié cuites que j'arrose plus ou moins régulièrement. Certaines deviennent des arbres. D'autres meurent. Toutes évoluent.

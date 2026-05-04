@@ -1,7 +1,8 @@
 ---
 import type { CollectionEntry } from 'astro:content';
 import { formatPlantedTended } from '../utils/relativeDate';
-import { stageGlyph, stageLabel, stageClass } from '../utils/growthStage';
+import { stageLabel, stageClass } from '../utils/growthStage';
+import StageIcon from './StageIcon.astro';
 
 interface Props {
   post: CollectionEntry<'garden'>;
@@ -20,7 +21,7 @@ const topic = data.tags?.[0] ?? '';
     <div class="card-thumb" style={`background-image: url('${data.cover}');`}></div>
   )}
   <p class="card-eyebrow">
-    <span class={stageClass(data.growthStage)}>{stageGlyph(data.growthStage)} {stageLabel(data.growthStage)}</span>
+    <span class={stageClass(data.growthStage)}><StageIcon stage={data.growthStage} />{stageLabel(data.growthStage)}</span>
     {topic && <><span> · </span><span>{topic}</span></>}
   </p>
   <h3>{data.title}</h3>

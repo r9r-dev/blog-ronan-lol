@@ -1,0 +1,54 @@
+---
+import type { GrowthStage } from '../utils/growthStage';
+
+interface Props {
+  stage: GrowthStage | string;
+  class?: string;
+}
+
+const { stage, class: className } = Astro.props;
+
+// Hex grid positions in 16x16 viewBox.
+// Rows alternate offset for organic cluster look.
+const P = {
+  topL:    [5.5, 2.5],
+  topR:    [10.5, 2.5],
+  upperL:  [3, 6],
+  upperC:  [8, 6],
+  upperR:  [13, 6],
+  lowerL:  [3, 10],
+  lowerC:  [8, 10],
+  lowerR:  [13, 10],
+  bottomL: [5.5, 13.5],
+  bottomR: [10.5, 13.5],
+} as const;
+
+const DOTS: Record<GrowthStage, Array<readonly [number, number]>> = {
+  seedling: [P.upperC, P.bottomL, P.bottomR],
+  budding:  [P.upperL, P.upperC, P.upperR, P.lowerC, P.bottomL, P.bottomR],
+  evergreen: [P.topL, P.topR, P.upperL, P.upperC, P.upperR, P.lowerL, P.lowerC, P.lowerR, P.bottomL, P.bottomR],
+};
+
+const dots = DOTS[stage as GrowthStage] ?? DOTS.seedling;
+---
+
+<svg
+  class:list={['stage-icon', className]}
+  viewBox="0 0 16 16"
+  width="1.05em"
+  height="1.05em"
+  fill="currentColor"
+  aria-hidden="true"
+  focusable="false"
+>
+  {dots.map(([cx, cy]) => <circle cx={cx} cy={cy} r="1.5" />)}
+</svg>
+
+<style>
+  .stage-icon {
+    display: inline-block;
+    vertical-align: -0.18em;
+    margin-right: 0.35em;
+    flex-shrink: 0;
+  }
+</style>

@@ -1,6 +1,7 @@
 ---
 import GardenCard from './GardenCard.astro';
 import ArticleItem from './ArticleItem.astro';
+import StageIcon from './StageIcon.astro';
 import type { CollectionEntry } from 'astro:content';
 
 interface Props {
@@ -12,7 +13,7 @@ const { garden, articles } = Astro.props;
 
 <section class="home-landing">
   <div class="home-col home-col--garden">
-    <p class="col-eyebrow eyebrow-garden">🌿 Jardin Numérique</p>
+    <p class="col-eyebrow eyebrow-garden"><StageIcon stage="evergreen" />Jardin Numérique</p>
     <h2>Jardin Numérique</h2>
     <p class="col-dek">Notes et idées vivantes. Parfois plantées, parfois arrosées.</p>
     <ul class="col-list">
