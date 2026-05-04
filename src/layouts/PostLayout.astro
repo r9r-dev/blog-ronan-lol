@@ -1,7 +1,6 @@
 ---
 import BaseLayout from './BaseLayout.astro';
 import TocRail from '../components/TocRail.astro';
-import NotesRail from '../components/NotesRail.astro';
 import { formatRelativeDate, formatAbsoluteDate, readTimeMinutes } from '../utils/relativeDate';
 import { stageGlyph, stageLabel } from '../utils/growthStage';
 import type { CollectionEntry } from 'astro:content';
@@ -30,6 +29,8 @@ const backLabel = isGarden ? 'Retour au jardin' : 'Retour aux articles';
 
 const stage = isGarden ? ((data as any).growthStage as 'seedling' | 'budding' | 'evergreen' | undefined) : null;
 const articleType = !isGarden ? ((data as any).type as string | undefined) : null;
+
+const notesJSON = JSON.stringify(notes);
 ---
 
 <BaseLayout title={data.title} description={data.excerpt}>
@@ -69,10 +70,35 @@ const articleType = !isGarden ? ((data as any).type as string | undefined) : nul
 
     <TocRail headings={headings} />
 
-    <div class="post-content">
+    <div class="post-content" data-notes={notesJSON}>
       <slot />
     </div>
-
-    <NotesRail notes={notes} />
   </article>
 </BaseLayout>
+
+<script>
+  function injectSidenotes() {
+    const root = document.querySelector<HTMLElement>('.post-content');
+    if (!root) return;
+    let notes: Array<{ num: number; html: string }> = [];
+    try { notes = JSON.parse(root.dataset.notes || '[]'); } catch { return; }
+    if (notes.length === 0) return;
+    const map = new Map(notes.map((n) => [String(n.num), n.html]));
+    root.querySelectorAll<HTMLElement>('.sidenote-ref').forEach((ref) => {
+      if (ref.dataset.injected) return;
+      const num = ref.textContent?.trim();
+      if (!num) return;
+      const html = map.get(num);
+      if (!html) return;
+      const aside = document.createElement('aside');
+      aside.className = 'sidenote-body';
+      aside.id = `sidenote-${num}`;
+      aside.innerHTML = `<span class="num">${num}</span>${html}`;
+      ref.insertAdjacentElement('afterend', aside);
+      ref.dataset.injected = '1';
+    });
+  }
+
+  document.addEventListener('astro:page-load', injectSidenotes);
+  if (document.readyState !== 'loading') injectSidenotes();
+</script>

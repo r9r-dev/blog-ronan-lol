@@ -14,6 +14,7 @@ const baseSchema = {
   excerpt: z.string().optional(),
   draft: z.boolean().optional().default(false),
   cover: z.string().optional(),
+  notes: z.record(z.string(), z.string()).optional(),
 };
 
 const garden = defineCollection({

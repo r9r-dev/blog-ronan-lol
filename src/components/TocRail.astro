@@ -7,7 +7,9 @@ const items = headings.filter((h) => h.depth === 2 || h.depth === 3);
 
 {items.length > 0 && (
   <aside class="toc-rail">
-    <button class="toc-summary" type="button" aria-expanded="false" aria-controls="toc-body">Table des matières</button>
+    <button class="toc-summary" type="button" aria-expanded="false" aria-controls="toc-body">
+      <span class="toc-summary-label">Sommaire</span>
+    </button>
     <p class="toc-title">Sommaire</p>
     <div class="toc-body" id="toc-body">
       <ol>
@@ -20,16 +22,46 @@ const items = headings.filter((h) => h.depth === 2 || h.depth === 3);
 )}
 
 <script>
+  const NARROW_BREAKPOINT = 1024;
+  // Read the same sticky offset the CSS uses for `.toc-rail` (top: 6rem)
+  const STICKY_TOP_REM = 6;
+
   function setupToc() {
-    const rail = document.querySelector('.toc-rail');
+    const rail = document.querySelector<HTMLElement>('.toc-rail');
     if (!rail) return;
-    const summary = rail.querySelector('.toc-summary');
+    const summary = rail.querySelector<HTMLButtonElement>('.toc-summary');
+
+    function isNarrow() {
+      return window.matchMedia(`(max-width: ${NARROW_BREAKPOINT - 1}px)`).matches;
+    }
+
+    function stickyTopPx() {
+      return STICKY_TOP_REM * parseFloat(getComputedStyle(document.documentElement).fontSize);
+    }
+
+    function syncCollapsed() {
+      let collapsed = false;
+      if (isNarrow()) {
+        // narrow viewport: not sticky, render as inline accordion
+        collapsed = true;
+      } else {
+        // wide viewport: collapse once the rail has actually started sticking
+        const top = rail.getBoundingClientRect().top;
+        collapsed = top <= stickyTopPx() + 1;
+      }
+      rail.classList.toggle('is-collapsed', collapsed);
+      if (!collapsed) rail.classList.remove('is-expanded');
+    }
+    syncCollapsed();
+    window.addEventListener('scroll', syncCollapsed, { passive: true });
+    window.addEventListener('resize', syncCollapsed);
+
     summary?.addEventListener('click', () => {
-      rail.classList.toggle('open');
-      const expanded = rail.classList.contains('open');
-      summary.setAttribute('aria-expanded', String(expanded));
+      rail.classList.toggle('is-expanded');
+      summary.setAttribute('aria-expanded', String(rail.classList.contains('is-expanded')));
     });
 
+    // Scrollspy
     const links = rail.querySelectorAll<HTMLAnchorElement>('.toc-body a');
     const idToLink = new Map<string, HTMLAnchorElement>();
     links.forEach((a) => {
@@ -55,4 +87,5 @@ const items = headings.filter((h) => h.depth === 2 || h.depth === 3);
     headings.forEach((h) => observer.observe(h));
   }
   document.addEventListener('astro:page-load', setupToc);
+  if (document.readyState !== 'loading') setupToc();
 </script>

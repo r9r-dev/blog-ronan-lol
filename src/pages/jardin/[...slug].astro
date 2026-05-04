@@ -13,9 +13,15 @@ export async function getStaticPaths() {
 const { post } = Astro.props;
 const { Content, headings } = await render(post);
 const body = (post as any).body ?? '';
-const notes = ((post.data as any).notes ?? null) as Array<{ num: number; html: string }> | null;
+
+const rawNotes = (post.data as any).notes as Record<string, string> | undefined;
+const notes = rawNotes
+  ? Object.entries(rawNotes)
+      .map(([k, html]) => ({ num: Number(k), html }))
+      .sort((a, b) => a.num - b.num)
+  : [];
 ---
 
-<PostLayout post={post} headings={headings} body={body} notes={notes ?? []}>
+<PostLayout post={post} headings={headings} body={body} notes={notes}>
   <Content />
 </PostLayout>

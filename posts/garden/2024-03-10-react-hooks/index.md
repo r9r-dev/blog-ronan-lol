@@ -5,9 +5,13 @@ date: "2024-03-10"
 tags: ["React", "JavaScript", "Frontend", "Hooks"]
 excerpt: "Maîtrisez les React Hooks avec ce guide complet couvrant tous les hooks essentiels et leurs cas d'usage pratiques."
 growthStage: evergreen
+notes:
+  "1": "React 16.8 est sorti en février 2019. Avant cette version, les composants fonctionnels n'avaient pas accès à l'état local — les classes étaient le seul moyen."
+  "2": "L'<a href=\"https://legacy.reactjs.org/docs/hooks-rules.html\">ESLint plugin <code>eslint-plugin-react-hooks</code></a> détecte automatiquement les violations de ces règles. Activez-le."
+  "3": "Le pattern d'updater function (<code>setCount(c => c + 1)</code>) est essentiel quand le nouvel état dépend de l'ancien. Évite la fermeture stale."
 ---
 
-Les React Hooks ont transformé la façon dont nous écrivons des composants React. Fini les classes complexes, place aux composants fonctionnels élégants et réutilisables. Découvrons ensemble comment tirer le meilleur parti de cette fonctionnalité puissante.
+Les React Hooks ont transformé la façon dont nous écrivons des composants React. Fini les classes complexes, place aux composants fonctionnels élégants et réutilisables.<sup class="sidenote-ref"><a href="#sidenote-1">1</a></sup> Découvrons ensemble comment tirer le meilleur parti de cette fonctionnalité puissante.
 
 ## Introduction aux Hooks
 
@@ -15,14 +19,14 @@ Les Hooks sont des fonctions qui permettent d'utiliser l'état et d'autres fonct
 
 ### Règles des Hooks
 
-Avant de commencer, deux règles essentielles :
+Avant de commencer, deux règles essentielles :<sup class="sidenote-ref"><a href="#sidenote-2">2</a></sup>
 
 1. **Appelez les Hooks uniquement au niveau racine** - Pas dans des boucles, conditions ou fonctions imbriquées
 2. **Appelez les Hooks uniquement depuis des fonctions React** - Composants ou custom hooks
 
 ## useState : Gérer l'état local
 
-Le Hook le plus fondamental pour gérer l'état dans un composant fonctionnel.
+Le Hook le plus fondamental pour gérer l'état dans un composant fonctionnel.<sup class="sidenote-ref"><a href="#sidenote-3">3</a></sup>
 
 ```jsx
 import React, { useState } from 'react';

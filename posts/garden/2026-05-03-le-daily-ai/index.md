@@ -8,8 +8,6 @@ excerpt: "urgences dopées à l'ia, hollywood verrouille, musique générée dé
 growthStage: seedling
 ---
 
-_urgences dopées à l'ia, hollywood verrouille, musique générée déborde, et créateurs bousculent les apps_
-
 L'IA s'invite aux urgences avec des résultats décoiffants, pendant qu'Hollywood trace une ligne rouge sur les œuvres synthétiques. Côté culture web, un cartoon culte ravive le débat sur la propriété intellectuelle des pubs d'IA, la musique générative sature les plateformes, et un créateur pas comme les autres propulse une app au sommet de l'App Store.
 
 ## Recherche et santé

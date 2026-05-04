@@ -7,9 +7,9 @@ const GLYPH: Record<GrowthStage, string> = {
 };
 
 const LABEL: Record<GrowthStage, string> = {
-  seedling: 'Seedling',
-  budding: 'Budding',
-  evergreen: 'Evergreen',
+  seedling: 'Graine',
+  budding: 'Bourgeon',
+  evergreen: 'Pérenne',
 };
 
 export function stageGlyph(stage: GrowthStage | string): string {
@@ -17,7 +17,7 @@ export function stageGlyph(stage: GrowthStage | string): string {
 }
 
 export function stageLabel(stage: GrowthStage): string {
-  return LABEL[stage] ?? 'Seedling';
+  return LABEL[stage] ?? 'Graine';
 }
 
 export function stageClass(stage: GrowthStage): string {

@@ -16,9 +16,9 @@ describe('stageGlyph', () => {
 
 describe('stageLabel', () => {
   it('returns capitalized english label', () => {
-    expect(stageLabel('seedling')).toBe('Seedling');
-    expect(stageLabel('budding')).toBe('Budding');
-    expect(stageLabel('evergreen')).toBe('Evergreen');
+    expect(stageLabel('seedling')).toBe('Graine');
+    expect(stageLabel('budding')).toBe('Bourgeon');
+    expect(stageLabel('evergreen')).toBe('Pérenne');
   });
 });
 

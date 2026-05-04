@@ -1372,7 +1372,7 @@ const { garden, articles } = Astro.props;
   <div class="home-col home-col--garden">
     <p class="col-eyebrow eyebrow-garden">🌿 Jardin Numérique</p>
     <h2>Jardin Numérique</h2>
-    <p class="col-dek">Notes vivantes, en cours d'arrosage. Idées qui poussent plus ou moins lentement.</p>
+    <p class="col-dek">Notes et idées vivantes.</p>
     <ul class="col-list">
       {garden.slice(0, 3).map((post) => (
         <li><GardenCard post={post} showExcerpt={false} /></li>
@@ -2281,9 +2281,9 @@ describe('stageGlyph', () => {
 
 describe('stageLabel', () => {
   it('returns capitalized english label', () => {
-    expect(stageLabel('seedling')).toBe('Seedling');
-    expect(stageLabel('budding')).toBe('Budding');
-    expect(stageLabel('evergreen')).toBe('Evergreen');
+    expect(stageLabel('seedling')).toBe('Graine');
+    expect(stageLabel('budding')).toBe('Bourgeon');
+    expect(stageLabel('evergreen')).toBe('Pérenne');
   });
 });
 
@@ -2316,9 +2316,9 @@ const GLYPH: Record<GrowthStage, string> = {
 };
 
 const LABEL: Record<GrowthStage, string> = {
-  seedling: 'Seedling',
-  budding: 'Budding',
-  evergreen: 'Evergreen',
+  seedling: 'Graine',
+  budding: 'Bourgeon',
+  evergreen: 'Pérenne',
 };
 
 export function stageGlyph(stage: GrowthStage | string): string {
@@ -2326,7 +2326,7 @@ export function stageGlyph(stage: GrowthStage | string): string {
 }
 
 export function stageLabel(stage: GrowthStage): string {
-  return LABEL[stage] ?? 'Seedling';
+  return LABEL[stage] ?? 'Graine';
 }
 
 export function stageClass(stage: GrowthStage): string {
