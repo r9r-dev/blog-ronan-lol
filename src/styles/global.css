@@ -975,7 +975,9 @@ body:has(.post-full) .page-header { display: none; }
 .post-content blockquote::before { content: ""; }
 .post-content blockquote p { margin: 0; }
 .post-content blockquote p::before { content: open-quote; }
-.post-content blockquote p:last-child::after { content: close-quote; }
+.post-content blockquote p::after  { content: close-quote; }
+.post-content blockquote p:has(> cite)::before,
+.post-content blockquote p:has(> cite)::after { content: ""; }
 .post-content blockquote p + p { margin-top: var(--s-3); }
 .post-content blockquote cite {
   display: block;
